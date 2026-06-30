@@ -1,0 +1,742 @@
+<style>
+:root {
+  --nd-font-sans:"Raptor Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --nd-bela:#FFFFFF;
+  --nd-bez:#F2EFE6;
+  --nd-fluo:#DBFF00;
+  --nd-fluo-press:#C2E000;
+  --nd-maslina-400:#232421;
+  --nd-maslina-300:#313330;
+  --nd-maslina-200:#3D403C;
+  --nd-maslina-100:#797D73;
+  --nd-body-on-dark:#D3D3D3;
+  --nd-body-on-light:#4C4D48;
+  --nd-body-on-white:#4F504D;
+  --nd-border-on-dark:rgba(255,255,255,0.14);
+  --nd-border-on-light:rgba(35,36,33,0.12);
+  --nd-border-strong:rgba(35,36,33,0.24);
+  --nd-on-accent:var(--nd-maslina-400);
+  --nd-radius-md:8px;
+  --nd-radius-lg:12px;
+  --nd-radius-xl:24px;
+  --nd-dur:180ms;
+  --nd-ease:cubic-bezier(0.22,1,0.36,1);
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{ background:#070A01; font-family:var(--nd-font-sans); }
+html{ scroll-behavior:smooth; }
+
+/* shared button */
+.cta{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:20px 36px; border-radius:var(--nd-radius-md);
+  font-family:var(--nd-font-sans); font-weight:600; font-size:18px; line-height:24px;
+  letter-spacing:-0.01em; border:1px solid transparent;
+  background:var(--nd-fluo); color:var(--nd-on-accent);
+  text-decoration:none; cursor:pointer; white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+  transition:background var(--nd-dur) var(--nd-ease), transform var(--nd-dur) var(--nd-ease);
+}
+.cta:hover{ background:var(--nd-fluo-press); }
+.cta:active{ transform:scale(0.98); }
+.cta.full{ width:100%; }
+
+/* ============ HERO ============ */
+.hero{
+  position:relative; min-height:100vh; background-color:#070A01;
+  color:var(--nd-bela); display:flex; flex-direction:column;
+}
+.qual-bar{
+  width:100%; background:var(--nd-fluo); color:var(--nd-maslina-400);
+  text-align:center; padding:14px 24px;
+  font-size:clamp(14px,1.5vw,18px); font-weight:600; letter-spacing:-0.01em;
+}
+.host-banner{
+  width:100%; aspect-ratio:1440/700;
+  background-image:url('https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a40ed58d2e509a66a3aaa0e_Webinar%20BG.png');
+  background-size:100% auto; background-position:top center; background-repeat:no-repeat;
+  flex:none;
+}
+.hero-content{
+  position:relative; z-index:2; margin-top:-9vw;
+  width:100%; max-width:760px; align-self:center;
+  padding:0 28px 64px; display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+.label{
+  display:inline-flex; align-items:center; gap:9px;
+  background:rgba(35,36,33,0.55); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border:1px solid var(--nd-border-on-dark); color:var(--nd-bela);
+  padding:9px 18px; border-radius:999px;
+  font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+}
+.label .dot{ width:8px; height:8px; border-radius:50%; background:var(--nd-fluo); display:inline-block; }
+.headline{
+  margin:20px 0 0; font-weight:500; font-size:clamp(42px,6vw,76px);
+  line-height:1.0; letter-spacing:-0.03em; color:var(--nd-bela); text-wrap:balance;
+}
+.subhead{
+  margin:24px 0 0; max-width:560px; font-size:clamp(16px,1.8vw,19px);
+  line-height:1.6; color:var(--nd-body-on-dark);
+}
+.subhead strong{ color:var(--nd-fluo); font-weight:600; }
+.cta-wrap{ margin-top:34px; width:100%; max-width:380px; }
+.date-row{
+  margin-top:16px; display:flex; align-items:center; gap:9px;
+  color:var(--nd-bela); font-size:15px; font-weight:600;
+}
+.countdown{ margin-top:48px; display:flex; gap:8px; }
+.cd-cell{
+  background:rgba(35,36,33,0.6); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border:1px solid var(--nd-border-on-dark); border-radius:12px;
+  padding:10px 14px; min-width:62px; text-align:center;
+}
+.cd-cell.accent{ background:var(--nd-fluo); border-color:transparent; }
+.cd-num{ font-size:24px; font-weight:500; line-height:1; color:var(--nd-bela); font-variant-numeric:tabular-nums; }
+.cd-cell.accent .cd-num{ color:var(--nd-maslina-400); }
+.cd-label{ margin-top:5px; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--nd-body-on-dark); }
+.cd-cell.accent .cd-label{ color:var(--nd-maslina-300); }
+.bullets{ margin-top:24px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px 20px; }
+.bullet{ display:flex; align-items:center; gap:8px; }
+.bullet .tick{
+  flex:none; width:20px; height:20px; border-radius:50%;
+  background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+}
+.bullet span:last-child{ font-size:14.5px; font-weight:500; color:var(--nd-bela); }
+
+/* ============ SECTION: &#352;TA &#262;E&#352; NAU&#268;ITI ============ */
+.learn{ background:var(--nd-bez); padding:clamp(64px,9vw,120px) 24px; }
+.wrap{ width:100%; max-width:1120px; margin:0 auto; }
+.eyebrow{
+  font-size:14px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--nd-maslina-100);
+}
+.learn-head{
+  margin:14px 0 0; max-width:760px;
+  font-weight:500; font-size:clamp(32px,4.4vw,48px); line-height:1.08;
+  letter-spacing:-0.03em; color:var(--nd-maslina-400); text-wrap:balance;
+}
+.learn-head em{ font-style:normal; color:#000; background:var(--nd-fluo); padding:0 .12em; border-radius:4px; }
+.learn-sub{
+  margin:18px 0 0; max-width:620px; font-size:18px; line-height:1.6; color:var(--nd-body-on-light);
+}
+.cards{ margin-top:48px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.card{
+  background:var(--nd-bela); border:1px solid var(--nd-border-on-light);
+  border-radius:var(--nd-radius-xl); padding:32px 28px; display:flex; flex-direction:column;
+}
+.card-num{
+  flex:none; width:44px; height:44px; border-radius:50%;
+  background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; font-weight:600;
+}
+.card h3{
+  margin:22px 0 0; font-weight:600; font-size:21px; line-height:1.25;
+  letter-spacing:-0.01em; color:var(--nd-maslina-400);
+}
+.card p{ margin:12px 0 0; font-size:16px; line-height:1.6; color:var(--nd-body-on-white); }
+.learn-cta{ margin-top:48px; display:flex; justify-content:center; }
+
+/* ============ SECTION: KO SAM JA ============ */
+.about{ background:var(--nd-bela); padding:clamp(64px,9vw,120px) 24px; }
+.about-inner{ width:100%; max-width:1000px; margin:0 auto; }
+.about-head{
+  margin:0 0 clamp(28px,4vw,40px); font-weight:500; font-size:clamp(32px,4.4vw,48px);
+  line-height:1.08; letter-spacing:-0.03em; color:var(--nd-maslina-400);
+}
+.about-grid{
+  width:100%;
+  display:grid; grid-template-columns:0.85fr 1.15fr; gap:clamp(32px,5vw,64px); align-items:center;
+}
+.about-photo-wrap{ display:flex; flex-direction:column; align-items:flex-start; }
+.about-photo{
+  width:100%; border-radius:var(--nd-radius-xl); display:block;
+  border:1px solid var(--nd-border-on-light);
+}
+.about-name{ margin:18px 0 0; font-weight:600; font-size:22px; letter-spacing:-0.01em; color:var(--nd-maslina-400); }
+.about-role{ margin:3px 0 0; font-size:15px; font-weight:500; color:var(--nd-maslina-100); }
+.about-divider{
+  height:2px; width:100%; border-radius:2px;
+  background:var(--nd-border-on-light); display:none;
+}
+.about-copy p{ margin:20px 0 0; font-size:18px; line-height:1.6; color:var(--nd-body-on-light); }
+.about-copy p:first-of-type{ margin-top:24px; }
+.about-copy p strong{ color:var(--nd-maslina-400); font-weight:600; }
+.about-cta{ margin-top:48px; }
+
+/* ============ SECTION: PRIJAVA ============ */
+.signup{ background:var(--nd-maslina-400); padding:clamp(64px,9vw,120px) 24px; }
+.signup-grid{
+  width:100%; max-width:1000px; margin:0 auto;
+  display:grid; grid-template-columns:1.05fr 0.95fr; gap:clamp(32px,5vw,64px); align-items:center;
+}
+.signup-copy .eyebrow{ color:var(--nd-fluo); }
+.signup h2{
+  margin:14px 0 0; font-weight:500; font-size:clamp(30px,4vw,44px); line-height:1.1;
+  letter-spacing:-0.03em; color:var(--nd-bela); text-wrap:balance;
+}
+.signup-copy p{ margin:18px 0 0; font-size:17px; line-height:1.6; color:var(--nd-body-on-dark); }
+.signup-meta{ margin-top:24px; display:flex; flex-direction:column; gap:12px; }
+.meta-row{ display:flex; align-items:center; gap:10px; color:var(--nd-bela); font-size:15px; font-weight:500; }
+.meta-row .tick{
+  flex:none; width:22px; height:22px; border-radius:50%;
+  background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+}
+.form-card{
+  background:var(--nd-maslina-200); border:1px solid var(--nd-border-on-dark);
+  border-radius:var(--nd-radius-xl); padding:clamp(28px,4vw,40px);
+}
+.form-card h3{ margin:0; font-weight:600; font-size:22px; letter-spacing:-0.01em; color:var(--nd-bela); }
+.form-card .hint{ margin:8px 0 0; font-size:14px; line-height:1.5; color:var(--nd-body-on-dark); }
+.field{ margin-top:18px; }
+.field label{ display:block; font-size:13px; font-weight:600; color:var(--nd-bela); margin-bottom:7px; }
+.field input{
+  width:100%; padding:14px 16px; border-radius:var(--nd-radius-md);
+  border:1px solid var(--nd-border-on-dark); background:var(--nd-maslina-400);
+  font-family:var(--nd-font-sans); font-size:16px; color:var(--nd-bela);
+  transition:border-color var(--nd-dur) var(--nd-ease);
+}
+.field input::placeholder{ color:#8a8b85; }
+.field input:focus{ outline:none; border-color:var(--nd-fluo); }
+.field input.err{ border-color:#E5484D; }
+.field .sub-note{ margin-top:6px; font-size:12px; color:#A9AAA4; }
+.form-card .cta{ margin-top:24px; }
+.form-success{
+  display:none; text-align:center; padding:20px 8px;
+}
+.form-success .big{
+  width:56px; height:56px; border-radius:50%; background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; margin:0 auto;
+}
+.form-success h3{ margin:18px 0 0; color:var(--nd-bela); }
+.form-success p{ margin:10px 0 0; font-size:15px; line-height:1.55; color:var(--nd-body-on-dark); }
+
+.site-foot{ background:#070A01; color:var(--nd-maslina-100); text-align:center; padding:28px 24px; font-size:13px; }
+
+/* ============ POPUP PRIJAVA ============ */
+body.modal-open{ overflow:hidden; }
+.modal-overlay{
+  position:fixed; inset:0; z-index:2147483600;
+  background:rgba(3,4,0,0.88); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  display:flex; align-items:center; justify-content:center; padding:24px;
+  opacity:0; visibility:hidden; transition:opacity .2s var(--nd-ease), visibility .2s var(--nd-ease);
+}
+.modal-overlay.open{ opacity:1; visibility:visible; }
+.modal{
+  width:100%; max-width:440px; background:var(--nd-maslina-200);
+  border:1px solid var(--nd-border-on-dark); border-radius:var(--nd-radius-xl);
+  padding:clamp(28px,5vw,40px); position:relative;
+  max-height:90vh; overflow-y:auto;
+  transform:translateY(12px) scale(0.98); transition:transform .22s var(--nd-ease);
+}
+.modal-overlay.open .modal{ transform:none; }
+.modal .eyebrow{ color:var(--nd-fluo); }
+.modal h3{ margin:12px 0 0; font-weight:600; font-size:23px; letter-spacing:-0.01em; color:var(--nd-bela); }
+.modal .hint{ margin:8px 0 0; font-size:14px; line-height:1.5; color:var(--nd-body-on-dark); }
+.modal .cta{ margin-top:24px; }
+.modal .form-success h3{ margin:18px 0 0; }
+.modal-close{
+  position:absolute; top:14px; right:14px; width:34px; height:34px;
+  border-radius:50%; border:1px solid var(--nd-border-on-dark);
+  background:rgba(255,255,255,0.06); color:var(--nd-bela);
+  font-size:20px; line-height:1; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background var(--nd-dur) var(--nd-ease);
+}
+.modal-close:hover{ background:rgba(255,255,255,0.12); }
+
+/* telefon: pozivni broj + broj spojeni u JEDNO polje */
+.ndm-phone-row{
+  display:flex; gap:0; width:100%;
+  border:1px solid rgba(255,255,255,0.14); border-radius:8px;
+  background:#232421; overflow:hidden;
+  transition:border-color .18s ease;
+}
+.ndm-phone-row:focus-within{ border-color:#DBFF00; }
+.ndm-country-select{
+  flex:0 0 auto; width:120px;
+  font-family:inherit; font-size:15px; color:#fff;
+  background-color:transparent;
+  border:none; border-right:1px solid rgba(255,255,255,0.14); border-radius:0;
+  padding:14px 34px 14px 14px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%23DBFF00'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center;
+  outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;
+  text-overflow:ellipsis; white-space:nowrap;
+}
+.ndm-phone-input{
+  flex:1 1 auto; min-width:0;
+  border:none; border-radius:0; background:transparent; color:#fff;
+  font-family:inherit; font-size:16px; padding:14px 16px; outline:none;
+}
+.ndm-country-select option,
+.ndm-country-select optgroup{ background:#232421; color:#fff; }
+.ndm-country-select optgroup{ color:#DBFF00; font-weight:700; font-style:normal; }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .cards{ grid-template-columns:1fr; }
+  .signup-grid{ grid-template-columns:1fr; }
+  .about-grid{ grid-template-columns:1fr; max-width:520px; }
+  .about-divider{ display:block; }
+}
+@media (min-width:1025px){
+  .host-banner{ background-position:center -64px; }
+  .hero-content{ margin-top:calc(-9vw - 160px); }
+}
+@media (max-width:640px){
+  .host-banner{ aspect-ratio:1440/820; }
+  .hero-content{ margin-top:-14vw; }
+  .countdown{ margin-top:36px; }
+}
+</style>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="qual-bar">Gleda&#353; kako ljudi zara&#273;uju sa AI&#8209;jem, a ne zna&#353; odakle da krene&#353;?</div>
+  <div class="host-banner" role="img" aria-label="Doma&#263;in webinara"></div>
+  <div class="hero-content">
+    <div class="label"><span class="dot"></span> Besplatni Zoom webinar</div>
+    <h1 class="headline">AI dizajnira, ti zara&#273;uje&#353;</h1>
+    <p class="subhead">
+      Za 45 minuta vidi&#353; za&#353;to je <strong>sada idealan trenutak da uz AI krene&#353; da pravi&#353; sajtove.</strong>
+      Trenutno najlak&#353;i na&#269;in da po&#269;ne&#353; da zara&#273;uje&#353; online - sa <strong>samo 3 sata dnevno, bez ikakvog predznanja.</strong>
+    </p>
+    <div class="cta-wrap"><a class="cta full" href="#prijava">Prijavi se besplatno <span aria-hidden="true">&#8594;</span></a></div>
+    <div class="date-row">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--nd-fluo)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
+      Webinar se odr&#382;ava u &#269;etvrtak, 9. jul u 19h
+    </div>
+    <div class="countdown" id="countdown">
+      <div class="cd-cell"><div class="cd-num" data-days>00</div><div class="cd-label">Dana</div></div>
+      <div class="cd-cell"><div class="cd-num" data-hours>00</div><div class="cd-label">Sati</div></div>
+      <div class="cd-cell"><div class="cd-num" data-mins>00</div><div class="cd-label">Min</div></div>
+      <div class="cd-cell accent"><div class="cd-num" data-secs>00</div><div class="cd-label">Sek</div></div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><span class="tick">&#10003;</span><span>Nije potrebno predznanje</span></div>
+      <div class="bullet"><span class="tick">&#10003;</span><span>Ne mora&#353; da zna&#353; da kodira&#353;</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ &#352;TA &#262;E&#352; NAU&#268;ITI ============ -->
+<section class="learn">
+  <div class="wrap">
+    <div class="eyebrow">&#352;ta &#263;e&#353; nau&#269;iti na webinaru</div>
+    <h2 class="learn-head">Tri stvari koje &#263;e&#353; razumeti za <em>45 minuta</em></h2>
+    <p class="learn-sub">Na webinaru &#263;u ti pokazati za&#353;to je sada idealna prilika da krene&#353; sa web dizajnom, &#269;ak i ako nema&#353; nikakvo predznanje.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">1</div>
+        <h3>Za&#353;to ba&#353; sad</h3>
+        <p>Do pre par meseci je za sajt trebalo bar 6 meseci u&#269;enja. Sada su potrebna 2 dana. Ovo zna&#269;i da su se vrata otvorila ljudima koji ranije nisu mogli ni da u&#273;u.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">2</div>
+        <h3>Kre&#263;e zlatna era web dizajna</h3>
+        <p>Hiljade firmi i preduzetnika nema sajt ili ima lo&#353;, i tra&#382;e nekog da to re&#353;i. Eksperti nisu hteli da im rade za 500&#8364;. Ti ho&#263;e&#353;, jer je sa AI-jem to 2 dana posla.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">3</div>
+        <h3>Put od 3 sata dnevno do prve uplate</h3>
+        <p>&#352;ta ti ta&#269;no treba, koje alate da koristi&#353; i kako da prvog klijenta na&#273;e&#353; ve&#263; za par dana.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KO SAM JA ============ -->
+<section class="about">
+  <div class="about-inner">
+    <h2 class="about-head">Ko sam ja?</h2>
+    <div class="about-grid">
+      <div class="about-photo-wrap">
+        <img class="about-photo" src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a40ed5de9381decc06133d5_Nikola%20predavanje%20slika.avif" alt="Nikola Tripkovi&#263; na predavanju">
+        <div class="about-name">Nikola Tripkovi&#263;</div>
+        <div class="about-role">CEO Nau&#269;i Dizajn</div>
+      </div>
+      <div class="about-copy">
+        <div class="about-divider"></div>
+        <p>Od 2020. do danas kroz moje besplatne i pla&#263;ene edukacije pro&#353;lo je <strong>vi&#353;e od 40.000 ljudi.</strong></p>
+        <p>Priliku kakvu nam AI sada daje do sada nisam video.</p>
+        <p>Nikada nije bio bolji momenat da se krene sa web dizajnom. Na webinaru &#263;u ti pokazati ta&#269;no i za&#353;to.</p>
+        <div class="about-cta"><a class="cta" href="#prijava">Prijavi se besplatno <span aria-hidden="true">&#8594;</span></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- popup prijava se gradi u JavaScript-u i ka&#269;i na body (vidi skriptu na dnu) -->
+
+<footer class="site-foot">&#169; 2026 &#183; AI dizajnira, ti zara&#273;uje&#353;</footer>
+
+<script>
+/* =========================================================================
+   PRIJAVA \u2014 AEvent registracija + Make webhook + tracking + referral
+
+   Tok na submit (po proven Tibor evergreen pattern-u):
+   1. Validacija (ime, email, telefon).
+   2. Make webhook (fire-and-forget JSON keepalive) \u2014 Kit + tracking. Vokativ se
+      ra\u010duna OVDE u browseru (inline), pa Make nema HTTP korak za vokativ.
+   3. AEvent API registracija (awaited) \u2014 attendance/watch-time tracking; AEvent
+      sam dodeli upcoming sesiju (secret+wtl, BEZ webinarid) i \u0161alje link/podsetnike.
+   4. Tek na AEvent OK -> redirect na thank-you (email/name/ref u URL-u + sessionStorage).
+      AEvent error -> poruka u modalu, BEZ redirecta (osoba nije registrovana).
+
+   URL capture: ?source= ?specificsource= (ad tracking), ?r= (referral kod) -> sessionStorage.
+   ========================================================================= */
+(function(){
+  /* ---------- KONFIG (proveri pre publish-a) ---------- */
+  var MAKE_WEBHOOK = "https://hook.eu2.make.com/n0sdfhr9jf1drjk85bjfnmkb2fh0eeqg";
+  var THANKYOU_URL = "/ai-dizajnira-ti-zaradjujes-thank-you"; // Webflow thank-you slug (www.naucidizajn.com)
+  var AEVENT = {
+    TENANT:   "42253777",
+    WTL:      "FLnvhOvvnBywf8g",
+    SECRET:   "UWKciZ4h9DKp92E",                              // AEvent api-registration secret (nalog 42253777) - testirano OK
+    ENDPOINT: "https://42253777.aevent.online/api-registration"
+  };
+  /* ---------------------------------------------------- */
+
+  /* 1. URL params -> storage.
+     nd_ref u sessionStorage (NE localStorage): atribucija va\u017ei za teku\u0107u sesiju.
+     localStorage bi nosio stari ref iz prethodne kampanje (isti klju\u010d) i pogre\u0161no
+     atribuirao organske posete -> cross-campaign bleed. */
+  var params = new URLSearchParams(window.location.search);
+  try {
+    var r = (params.get("r") || "").trim().toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
+    if (r.length >= 4) sessionStorage.setItem("nd_ref", r);
+  } catch(e){}
+  try {
+    var trk = {
+      source: (params.get("source") || "").trim().slice(0,120),
+      specificsource: (params.get("specificsource") || "").trim().slice(0,120)
+    };
+    if (trk.source || trk.specificsource) sessionStorage.setItem("nd_trk", JSON.stringify(trk));
+  } catch(e){}
+
+  function getRef(){ try { return sessionStorage.getItem("nd_ref") || ""; } catch(e){ return ""; } }
+  function getTrk(){ try { return JSON.parse(sessionStorage.getItem("nd_trk") || "{}"); } catch(e){ return {}; } }
+  function splitName(full){
+    full = (full || "").trim().replace(/\s+/g," ");
+    if (!full) return { first:"", last:"" };
+    var p = full.split(" ");
+    if (p.length === 1) return { first:p[0], last:"" };
+    return { first:p[0], last:p.slice(1).join(" ") };
+  }
+
+  /* 2. modal (gradi se u JS, otporno na Webflow) */
+  function field(id,label,ph,type,ac,note){
+    return '<div style="margin-top:18px;">'
+      + '<label for="'+id+'" style="display:block;font-size:13px;font-weight:600;color:#fff;margin-bottom:7px;">'+label+'</label>'
+      + '<input id="'+id+'" type="'+type+'" placeholder="'+ph+'" autocomplete="'+ac+'" style="width:100%;padding:14px 16px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:#232421;font-family:inherit;font-size:16px;color:#fff;box-sizing:border-box;outline:none;">'
+      + (note ? '<div style="margin-top:6px;font-size:12px;color:#A9AAA4;">'+note+'</div>' : '')
+      + '</div>';
+  }
+
+  /* telefon: country dropdown (E.164 validacija kao kod Tibora) */
+  var NDM_COUNTRIES = {
+    Balkan: [
+      ["+385","HR","\ud83c\udded\ud83c\uddf7 +385"],["+387","BA","\ud83c\udde7\ud83c\udde6 +387"],["+381","RS","\ud83c\uddf7\ud83c\uddf8 +381"],
+      ["+382","ME","\ud83c\uddf2\ud83c\uddea +382"],["+386","SI","\ud83c\uddf8\ud83c\uddee +386"],["+389","MK","\ud83c\uddf2\ud83c\uddf0 +389"],
+      ["+383","XK","\ud83c\uddfd\ud83c\uddf0 +383"],["+355","AL","\ud83c\udde6\ud83c\uddf1 +355"]
+    ],
+    Ostalo: [
+      ["+61","AU","\ud83c\udde6\ud83c\uddfa Australija (+61)"],["+43","AT","\ud83c\udde6\ud83c\uddf9 Austrija (+43)"],["+32","BE","\ud83c\udde7\ud83c\uddea Belgija (+32)"],
+      ["+55","BR","\ud83c\udde7\ud83c\uddf7 Brazil (+55)"],["+359","BG","\ud83c\udde7\ud83c\uddec Bugarska (+359)"],["+420","CZ","\ud83c\udde8\ud83c\uddff \u010ce\u0161ka (+420)"],
+      ["+45","DK","\ud83c\udde9\ud83c\uddf0 Danska (+45)"],["+20","EG","\ud83c\uddea\ud83c\uddec Egipat (+20)"],["+63","PH","\ud83c\uddf5\ud83c\udded Filipini (+63)"],
+      ["+358","FI","\ud83c\uddeb\ud83c\uddee Finska (+358)"],["+33","FR","\ud83c\uddeb\ud83c\uddf7 Francuska (+33)"],["+30","GR","\ud83c\uddec\ud83c\uddf7 Gr\u010dka (+30)"],
+      ["+91","IN","\ud83c\uddee\ud83c\uddf3 Indija (+91)"],["+62","ID","\ud83c\uddee\ud83c\udde9 Indonezija (+62)"],["+353","IE","\ud83c\uddee\ud83c\uddea Irska (+353)"],
+      ["+39","IT","\ud83c\uddee\ud83c\uddf9 Italija (+39)"],["+972","IL","\ud83c\uddee\ud83c\uddf1 Izrael (+972)"],["+81","JP","\ud83c\uddef\ud83c\uddf5 Japan (+81)"],
+      ["+27","ZA","\ud83c\uddff\ud83c\udde6 Ju\u017enoafri\u010dka R. (+27)"],["+1","CA","\ud83c\udde8\ud83c\udde6 Kanada (+1)"],["+86","CN","\ud83c\udde8\ud83c\uddf3 Kina (+86)"],
+      ["+36","HU","\ud83c\udded\ud83c\uddfa Ma\u0111arska (+36)"],["+60","MY","\ud83c\uddf2\ud83c\uddfe Malezija (+60)"],["+52","MX","\ud83c\uddf2\ud83c\uddfd Meksiko (+52)"],
+      ["+31","NL","\ud83c\uddf3\ud83c\uddf1 Holandija (+31)"],["+47","NO","\ud83c\uddf3\ud83c\uddf4 Norve\u0161ka (+47)"],["+49","DE","\ud83c\udde9\ud83c\uddea Nema\u010dka (+49)"],
+      ["+48","PL","\ud83c\uddf5\ud83c\uddf1 Poljska (+48)"],["+351","PT","\ud83c\uddf5\ud83c\uddf9 Portugal (+351)"],["+40","RO","\ud83c\uddf7\ud83c\uddf4 Rumunija (+40)"],
+      ["+7","RU","\ud83c\uddf7\ud83c\uddfa Rusija (+7)"],["+1","US","\ud83c\uddfa\ud83c\uddf8 SAD (+1)"],["+966","SA","\ud83c\uddf8\ud83c\udde6 Saudijska Arabija (+966)"],
+      ["+65","SG","\ud83c\uddf8\ud83c\uddec Singapur (+65)"],["+421","SK","\ud83c\uddf8\ud83c\uddf0 Slova\u010dka (+421)"],["+34","ES","\ud83c\uddea\ud83c\uddf8 \u0160panija (+34)"],
+      ["+46","SE","\ud83c\uddf8\ud83c\uddea \u0160vedska (+46)"],["+41","CH","\ud83c\udde8\ud83c\udded \u0160vajcarska (+41)"],["+66","TH","\ud83c\uddf9\ud83c\udded Tajland (+66)"],
+      ["+90","TR","\ud83c\uddf9\ud83c\uddf7 Turska (+90)"],["+971","AE","\ud83c\udde6\ud83c\uddea UAE (+971)"],["+380","UA","\ud83c\uddfa\ud83c\udde6 Ukrajina (+380)"],
+      ["+44","GB","\ud83c\uddec\ud83c\udde7 Velika Britanija (+44)"],["+84","VN","\ud83c\uddfb\ud83c\uddf3 Vijetnam (+84)"]
+    ]
+  };
+  function ndmOpts(list){
+    return list.map(function(o){
+      return '<option value="'+o[0]+'" data-country="'+o[1]+'"'+(o[1]==="RS"?" selected":"")+'>'+o[2]+'</option>';
+    }).join("");
+  }
+  var phoneRowHtml = '<div style="margin-top:18px;">'
+    + '<label for="ndm-telefon" style="display:block;font-size:13px;font-weight:600;color:#fff;margin-bottom:7px;">Telefon (WhatsApp)</label>'
+    + '<div class="ndm-phone-row">'
+    +   '<select id="ndm-country" class="ndm-country-select" aria-label="Pozivni broj">'
+    +     '<optgroup label="Balkan">'+ndmOpts(NDM_COUNTRIES.Balkan)+'</optgroup>'
+    +     '<optgroup label="Ostalo">'+ndmOpts(NDM_COUNTRIES.Ostalo)+'</optgroup>'
+    +   '</select>'
+    +   '<input id="ndm-telefon" class="ndm-phone-input" type="tel" inputmode="tel" placeholder="6x xxx xxxx" autocomplete="tel">'
+    + '</div>'
+    + '<div style="margin-top:6px;font-size:12px;color:#A9AAA4;">\u0160aljemo podsetnik na WhatsApp da ne propusti\u0161 start.</div>'
+    + '</div>';
+
+  var html = '<div role="dialog" aria-modal="true" style="width:100%;max-width:440px;background:#3D403C;border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:36px;position:relative;max-height:90vh;overflow:auto;color:#fff;box-sizing:border-box;">'
+    + '<button id="ndm-close" type="button" aria-label="Zatvori" style="position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;font-size:20px;line-height:1;cursor:pointer;">\u00d7</button>'
+    + '<div id="ndm-form">'
+    + '<div style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#DBFF00;">Rezervi\u0161i mesto</div>'
+    + '<h3 style="margin:12px 0 0;font-weight:600;font-size:23px;letter-spacing:-0.01em;color:#fff;">Prijavi se na besplatan webinar</h3>'
+    + '<p style="margin:8px 0 0;font-size:14px;line-height:1.5;color:#D3D3D3;">\u010cetvrtak, 9. jul u 19h, u\u017eivo preko Zoom-a. \u0160aljem ti link i podsetnik pre po\u010detka.</p>'
+    + field("ndm-ime","Ime i prezime","Petar Petrovi\u0107","text","name","")
+    + field("ndm-email","Email","email@primer.com","email","email","")
+    + phoneRowHtml
+    + '<div id="ndm-error" style="display:none;margin-top:14px;font-size:13px;line-height:1.45;color:#FFB4B4;background:rgba(229,72,77,0.12);border:1px solid rgba(229,72,77,0.4);border-radius:8px;padding:10px 12px;"></div>'
+    + '<a id="ndm-submit" href="#" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:24px;padding:20px 36px;border-radius:8px;background:#DBFF00;color:#232421;font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.01em;text-decoration:none;cursor:pointer;">Rezervi\u0161i svoje mesto <span>\u2192</span></a>'
+    + '</div>'
+    + '<div id="ndm-success" style="display:none;text-align:center;padding:20px 8px;">'
+    + '<div style="width:56px;height:56px;border-radius:50%;background:#DBFF00;color:#232421;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;margin:0 auto;">\u2713</div>'
+    + '<h3 style="margin:18px 0 0;color:#fff;font-weight:600;font-size:22px;">Prijava primljena</h3>'
+    + '<p style="margin:10px 0 0;font-size:15px;line-height:1.55;color:#D3D3D3;">Prebacujemo te na slede\u0107i korak\u2026</p>'
+    + '</div>';
+  var overlay = document.createElement("div");
+  overlay.id = "ndm-overlay";
+  overlay.setAttribute("style","position:fixed;inset:0;z-index:2147483600;background:rgba(3,4,0,0.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px;font-family:'Raptor Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;");
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+
+  function openM(e){
+    if(e) e.preventDefault();
+    if (typeof submitted !== "undefined" && submitted) {
+      document.getElementById("ndm-form").style.display="none";
+      document.getElementById("ndm-success").style.display="block";
+    }
+    overlay.style.display="flex"; document.documentElement.style.overflow="hidden";
+  }
+  function closeM(){ overlay.style.display="none"; document.documentElement.style.overflow=""; }
+  [].forEach.call(document.querySelectorAll('a[href="#prijava"]'), function(a){ a.addEventListener("click", openM); });
+  document.getElementById("ndm-close").addEventListener("click", closeM);
+  overlay.addEventListener("click", function(e){ if(e.target===overlay) closeM(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape" && overlay.style.display==="flex") closeM(); });
+
+  var ime=document.getElementById("ndm-ime"), email=document.getElementById("ndm-email"), tel=document.getElementById("ndm-telefon"), country=document.getElementById("ndm-country");
+  var submitBtn=document.getElementById("ndm-submit"), errBox=document.getElementById("ndm-error");
+  var phoneRow = tel ? tel.parentElement : null; // .ndm-phone-row \u2014 border ide ovde (input je borderless)
+  function vEmail(v){ v=v.trim(); var at=v.indexOf("@"); var dot=v.lastIndexOf("."); return at>0 && dot>at+1 && dot<v.length-1 && v.indexOf(" ")===-1; }
+  function vPhone(v){ return String(v).replace(/\D/g,"").length >= 6; } // labavo: bar 6 cifara
+  function reset(f){ if(f) f.style.borderColor="rgba(255,255,255,0.14)"; }
+  function resetRow(){ if(phoneRow) phoneRow.style.borderColor=""; } // clear inline -> CSS (neutral + fluo focus)
+  function showError(m){ if(errBox){ errBox.textContent=m; errBox.style.display="block"; } }
+  function clearError(){ if(errBox){ errBox.textContent=""; errBox.style.display="none"; } }
+  function setLoading(on){
+    if(on){ submitBtn.style.pointerEvents="none"; submitBtn.style.opacity="0.85"; submitBtn.innerHTML="Prijavljujem\u2026"; }
+    else { submitBtn.style.pointerEvents=""; submitBtn.style.opacity=""; submitBtn.innerHTML='Rezervi\u0161i svoje mesto <span>\u2192</span>'; }
+  }
+
+  /* telefon -> E.164 preko izabranog pozivnog broja (kao Tibor) */
+  function buildPhone(dialCode, raw){
+    var clean=function(s){ return (s||"").replace(/[\s\-().]/g,""); };
+    var num=(raw||"").trim();
+    if(!num) return "";
+    if(num.charAt(0)==="+") return clean(num);
+    if(num.indexOf("00")===0) return "+"+clean(num.slice(2));
+    return (dialCode||"+381") + clean(num).replace(/^0+/,"");
+  }
+
+  /* per-country placeholder + geo-IP auto-detekcija zemlje */
+  var PHONE_PLACEHOLDERS = {
+    HR:'91 1234567', RS:'60 1234567', BA:'61 234 567', ME:'67 123 456',
+    SI:'31 234 567', MK:'70 123 456', XK:'44 123 456', AL:'66 123 4567',
+    AU:'412 345 678', AT:'660 1234567', BE:'470 12 34 56', BR:'11 91234 5678',
+    BG:'87 123 4567', CZ:'601 123 456', DK:'20 12 34 56', EG:'100 123 4567',
+    PH:'905 123 4567', FI:'40 1234567', FR:'6 12 34 56 78', GR:'691 234 5678',
+    IN:'81234 56789', ID:'812 3456 789', IE:'85 012 3456', IT:'312 345 6789',
+    IL:'50 123 4567', JP:'90 1234 5678', ZA:'71 123 4567', CA:'506 234 5678',
+    CN:'131 2345 6789', HU:'20 123 4567', MY:'12 345 6789', MX:'55 1234 5678',
+    NL:'6 12345678', NO:'406 12 345', DE:'1512 3456789', PL:'512 345 678',
+    PT:'912 345 678', RO:'712 345 678', RU:'912 345 6789', US:'201 555 0123',
+    SA:'50 123 4567', SG:'8123 4567', SK:'912 123 456', ES:'612 34 56 78',
+    SE:'70 123 45 67', CH:'78 123 45 67', TH:'81 234 5678', TR:'501 234 5678',
+    AE:'50 123 4567', UA:'50 123 4567', GB:'7400 123456', VN:'912 345 678'
+  };
+  function setPhonePlaceholder(){
+    if(!country||!tel) return;
+    var opt=country.options[country.selectedIndex];
+    var cc=opt?opt.getAttribute("data-country"):null;
+    tel.placeholder=(cc&&PHONE_PLACEHOLDERS[cc])||"6x xxx xxxx";
+  }
+  function applyCountryCode(code){
+    if(!code||!country) return false;
+    code=String(code).trim().toUpperCase();
+    if(!/^[A-Z]{2}$/.test(code)) return false;
+    var opt=country.querySelector('option[data-country="'+code+'"]');
+    if(opt){ opt.selected=true; country.value=opt.value; setPhonePlaceholder(); return true; }
+    return false;
+  }
+  if(country){
+    country.addEventListener("change", setPhonePlaceholder);
+    setPhonePlaceholder();
+    if(typeof fetch==="function"){
+      var geoTimeout=function(){ return (window.AbortSignal&&AbortSignal.timeout)?AbortSignal.timeout(2500):undefined; };
+      var GEO=[
+        function(){ return fetch("https://get.geojs.io/v1/ip/country.json",{signal:geoTimeout()}).then(function(r){return r.ok?r.json():null;}).then(function(j){return j&&j.country;}); },
+        function(){ return fetch("https://ipwho.is/?fields=country_code",{signal:geoTimeout()}).then(function(r){return r.ok?r.json():null;}).then(function(j){return j&&j.country_code;}); },
+        function(){ return fetch("https://ipapi.co/country/",{signal:geoTimeout()}).then(function(r){return r.ok?r.text():null;}); }
+      ];
+      (function tryGeo(i){ if(i>=GEO.length) return; GEO[i]().then(function(c){ if(!applyCountryCode(c)) tryGeo(i+1); }).catch(function(){ tryGeo(i+1); }); })(0);
+    }
+  }
+
+  /* Vokativ (srpski) \u2014 inline, identi\u010dno tibor-vokativ.vercel.app/api/vokativ.
+     Bezbedno: jasni (uglavnom mu\u0161ki) vokativi; \u017eensko/strano/nesigurno -> nominativ. */
+  var VOK_DICT = {
+    'petar':'Petre','aleksandar':'Aleksandre','vuk':'Vuk','novak':'Novak','tarik':'Tarik','faruk':'Faruk',
+    'daniel':'Daniel','gabriel':'Gabriel','mihael':'Mihael','rafael':'Rafael','samuel':'Samuel','manuel':'Manuel','noel':'Noel',
+    'kevin':'Kevin','brajan':'Brajan','dilan':'Dilan','denis':'Denis',
+    'ines':'Ines','nives':'Nives','karmen':'Karmen','doris':'Doris','iris':'Iris','ingrid':'Ingrid',
+    'dolores':'Dolores','nikol':'Nikol','merjem':'Merjem'
+  };
+  function vokativ(raw){
+    if(!raw) return "";
+    var nm = String(raw).trim().split(/\s+/)[0];
+    if(!nm) return "";
+    nm = nm.charAt(0).toLocaleUpperCase('sr') + nm.slice(1).toLocaleLowerCase('sr');
+    var key = nm.toLocaleLowerCase('sr');
+    if(VOK_DICT[key]) return VOK_DICT[key];
+    var last = nm.slice(-1).toLowerCase();
+    if('aeiou'.indexOf(last)!==-1) return nm;   // samoglasnik -> nominativ
+    if('kgh'.indexOf(last)!==-1) return nm;     // -k/-g/-h
+    if(last==='j') return nm;                   // -j -> nominativ
+    return nm + 'e';                            // ostali suglasnici -> Stefan->Stefane
+  }
+
+  function parseAEventError(body,status){
+    var msg=""; try{ var j=JSON.parse(body); if(j&&j.error) msg=String(j.error); }catch(e){ msg=body||""; }
+    var t=msg.toLowerCase();
+    if(t.indexOf("invalid email")!==-1) return "Email nije validan. Proveri unos.";
+    if(t.indexOf("webinar not found")!==-1||t.indexOf("no upcoming")!==-1) return "Trenutno nema dostupnog termina. Probaj kasnije ili nas kontaktiraj.";
+    if(t.indexOf("already registered")!==-1||t.indexOf("duplicate")!==-1) return "Ve\u0107 si prijavljen sa ovim email-om. Proveri inbox (i promotions/spam).";
+    if(t.indexOf("invalid phone")!==-1) return "Broj telefona nije validan. Proveri format.";
+    if(t.indexOf("rate limit")!==-1||status===429) return "Previ\u0161e poku\u0161aja. Sa\u010dekaj minut pa probaj ponovo.";
+    if(status===0) return "Nema konekcije. Proveri internet pa probaj ponovo.";
+    if(msg&&msg.length<200) return "Gre\u0161ka: "+msg;
+    return "Do\u0161lo je do gre\u0161ke ("+status+"). Poku\u0161aj ponovo.";
+  }
+
+  var submitted = false; // guard protiv duplog slanja
+  submitBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    if (submitted) return;
+    clearError();
+    var ok=true; reset(ime); reset(email); resetRow();
+    if(!ime.value.trim()){ ime.style.borderColor="#E5484D"; ok=false; }
+    if(!vEmail(email.value.trim())){ email.style.borderColor="#E5484D"; ok=false; }
+    if(!vPhone(tel.value)){ if(phoneRow) phoneRow.style.borderColor="#E5484D"; ok=false; }
+    if(!ok){ showError("Proveri unos \u2014 ime, ispravan email i telefon su obavezni."); return; }
+
+    var emailVal = email.value.trim().toLowerCase();
+    var fullName = ime.value.trim().replace(/\s+/g," ");
+    var sp = splitName(fullName);
+    var phoneE164 = buildPhone(country ? country.value : "+381", tel.value);
+    var trk = getTrk();
+    var ref = getRef();
+
+    submitted = true;
+    setLoading(true);
+
+    /* hand-off za thank-you referral widget (backup uz URL params na redirectu) */
+    try {
+      sessionStorage.setItem("nd_signup", JSON.stringify({ email: emailVal, name: fullName, ref: ref, ts: Date.now() }));
+    } catch(_){}
+
+    /* 1) Make webhook (fire-and-forget JSON keepalive): Kit + tracking. Vokativ ra\u010dunamo ovde. */
+    try {
+      var mk = { name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
+                 email:emailVal, phone:phoneE164, ref:ref };
+      if(trk.source) mk.source = String(trk.source);
+      if(trk.specificsource) mk.specificsource = String(trk.specificsource);
+      fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(mk), keepalive:true }).catch(function(){});
+    } catch(_){}
+
+    /* success + redirect na thank-you (DRY) */
+    function ndGoThankYou(){
+      document.getElementById("ndm-form").style.display="none";
+      document.getElementById("ndm-success").style.display="block";
+      var hq = new URLSearchParams();
+      hq.set("email", emailVal);
+      if(fullName) hq.set("name", fullName);
+      if(ref) hq.set("ref", ref);
+      var sep = THANKYOU_URL.indexOf("?") > -1 ? "&" : "?";
+      setTimeout(function(){ window.location.href = THANKYOU_URL + sep + hq.toString(); }, 700);
+    }
+
+    /* Dok je AEvent secret placeholder -> preskoci AEvent (inace bi vratio gresku i blokirao prijavu).
+       Funnel radi (Make + redirect); attendance registracija se aktivira cim ubacis pravi secret. */
+    if (!AEVENT.SECRET || AEVENT.SECRET.indexOf("PASTE_") === 0) {
+      ndGoThankYou();
+      return;
+    }
+
+    /* 2) AEvent API registracija (awaited): attendance tracking; AEvent dodeli sesiju (secret+wtl) */
+    var aeBody = new URLSearchParams();
+    aeBody.append("secret", AEVENT.SECRET);
+    aeBody.append("wtl", AEVENT.WTL);
+    aeBody.append("name", fullName);
+    aeBody.append("email", emailVal);
+    aeBody.append("phone", phoneE164);
+    if(trk.source) aeBody.append("source", String(trk.source));
+    if(trk.specificsource) aeBody.append("specificsource", String(trk.specificsource));
+    if(ref) aeBody.append("ref", ref);
+
+    var ctrl = (typeof AbortController!=="undefined") ? new AbortController() : null;
+    var tid = ctrl ? setTimeout(function(){ ctrl.abort(); }, 15000) : null;
+
+    fetch(AEVENT.ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+      body:aeBody.toString(),
+      signal: ctrl ? ctrl.signal : undefined
+    })
+    .then(function(res){ if(tid) clearTimeout(tid); return res.text().then(function(b){ return { ok:res.ok, status:res.status, body:b }; }); })
+    .then(function(r){
+      if(r.ok){
+        /* 3) AEvent OK -> success + redirect na thank-you */
+        ndGoThankYou();
+      } else {
+        submitted = false; setLoading(false);
+        showError(parseAEventError(r.body, r.status));
+      }
+    })
+    .catch(function(err){
+      if(tid) clearTimeout(tid);
+      submitted = false; setLoading(false);
+      showError(err && err.name==="AbortError" ? "Mre\u017ea je prespora. Poku\u0161aj ponovo." : "Gre\u0161ka pri prijavi. Proveri vezu pa probaj ponovo.");
+    });
+  });
+})();
+
+/* ===== countdown ===== */
+(function(){
+  var target = new Date("2026-07-09T19:00:00+02:00").getTime(); // Beograd vreme (UTC+2 u julu)
+  var el = {
+    days: document.querySelector("[data-days]"),
+    hours: document.querySelector("[data-hours]"),
+    mins: document.querySelector("[data-mins]"),
+    secs: document.querySelector("[data-secs]")
+  };
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function tick(){
+    var now = Date.now();
+    if (target <= now) { var cd=document.getElementById("countdown"); if(cd) cd.style.display="none"; return; }
+    var diff = target - now;
+    var S=1000, M=60*S, H=60*M, D=24*H;
+    var days=Math.floor(diff/D); diff-=days*D;
+    var hours=Math.floor(diff/H); diff-=hours*H;
+    var mins=Math.floor(diff/M); diff-=mins*M;
+    var secs=Math.floor(diff/S);
+    el.days.textContent=pad(days);
+    el.hours.textContent=pad(hours);
+    el.mins.textContent=pad(mins);
+    el.secs.textContent=pad(secs);
+  }
+  tick(); setInterval(tick, 1000);
+})();
+</script>

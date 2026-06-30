@@ -1,0 +1,72 @@
+<!--
+  Nauči Dizajn · UI/UX Webinar Landing · Referral Capture + Form Handoff
+
+  INSTALL: Page Settings → Custom Code → Inside <head> tag. Save + Publish.
+
+  Does two things:
+  1. Reads ?r=CODE from URL, stores to localStorage, populates hidden <input name="ref">
+  2. On form submit, stashes Name/Email/ref to sessionStorage so the thank-you
+     page can read them (Webflow's redirect strips form data from URL).
+-->
+<script>
+(function () {
+  var REF_STORAGE = 'nd_ref';
+  var SIGNUP_STORAGE = 'nd_signup';
+  var QUERY_PARAM = 'r';
+
+  // 1. Capture ?r= from URL and persist to localStorage
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var codeFromUrl = params.get(QUERY_PARAM);
+    if (codeFromUrl) {
+      var clean = codeFromUrl.trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      if (clean.length >= 4) {
+        try { localStorage.setItem(REF_STORAGE, clean); } catch (e) {}
+      }
+    }
+  } catch (e) {}
+
+  function getStoredRef() {
+    try { return localStorage.getItem(REF_STORAGE) || ''; } catch (e) { return ''; }
+  }
+
+  // 2. Populate hidden ref field(s) on the page
+  function populateRefFields() {
+    var ref = getStoredRef();
+    if (!ref) return;
+    var fields = document.querySelectorAll('input[name="ref"]');
+    for (var i = 0; i < fields.length; i++) {
+      if (!fields[i].value) fields[i].value = ref;
+    }
+  }
+
+  // 3. On form submit, stash form values to sessionStorage for the thank-you page
+  function onSubmit(e) {
+    populateRefFields();
+    var form = e.target || this;
+    try {
+      var data = {
+        email: (form.querySelector('input[name="Email"], input[name="email"]') || {}).value || '',
+        name:  (form.querySelector('input[name="Name"], input[name="name"]')   || {}).value || '',
+        ref:   (form.querySelector('input[name="ref"], input[name="Ref"]')     || {}).value || getStoredRef(),
+        ts:    Date.now(),
+      };
+      sessionStorage.setItem(SIGNUP_STORAGE, JSON.stringify(data));
+    } catch (err) {}
+  }
+
+  function attachFormHandlers() {
+    populateRefFields();
+    var forms = document.querySelectorAll('form');
+    for (var i = 0; i < forms.length; i++) {
+      forms[i].addEventListener('submit', onSubmit, true);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attachFormHandlers);
+  } else {
+    attachFormHandlers();
+  }
+})();
+</script>

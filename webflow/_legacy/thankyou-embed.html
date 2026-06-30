@@ -1,0 +1,279 @@
+<!--
+  Nauči Dizajn · Thank-you page · Referral Link Card Embed (dark theme)
+
+  INSTALL:
+  Webflow Designer → thank-you page → Embed element where you want the card.
+  Paste everything below (style + markup + script). Publish.
+
+  Renders a single dark card (olive-400 background) with: "TVOJ REFERRAL LINK"
+  label, read-only input with the user's personal link, fluorescent Kopiraj
+  button, and a footnote link to the full dashboard.
+
+  CONFIG below is already filled with production values. No edits needed.
+-->
+
+<style>
+  .nd-ref-embed {
+    font-family: 'Raptor', Arial, sans-serif;
+    font-weight: 500;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .nd-ref-embed * { box-sizing: border-box; }
+
+  .nd-ref-card {
+    background: #313330;
+    border: 1px solid #3d403c;
+    border-radius: 0.75rem;
+    padding: 2rem;
+  }
+
+  .nd-ref-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #797d73;
+    margin-bottom: 14px;
+  }
+
+  .nd-ref-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .nd-ref-input {
+    flex: 1;
+    background: #232421;
+    border: 1px solid #3d403c;
+    color: #f2efe6;
+    font-family: 'Raptor', Menlo, monospace;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 14px 16px;
+    border-radius: 0.25rem;
+    outline: none;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nd-ref-input:focus { border-color: #797d73; }
+
+  .nd-ref-btn {
+    background: #dbff00;
+    color: #232421;
+    border: 1px solid transparent;
+    padding: 14px 26px;
+    border-radius: 0.25rem;
+    font-family: 'Raptor', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .nd-ref-btn:hover { background: #afcc00; }
+  .nd-ref-btn:active { transform: scale(0.97); }
+  .nd-ref-btn.nd-ref-copied { background: #5b7a5f; color: #ffffff; }
+
+  .nd-ref-footnote {
+    color: #a8a79b;
+    font-size: 13px;
+    line-height: 1.55;
+    margin-top: 12px;
+  }
+  .nd-ref-footnote a {
+    color: #dbff00;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .nd-ref-footnote a:hover { color: #afcc00; }
+
+  .nd-ref-status {
+    color: #a8a79b;
+    font-size: 14px;
+    line-height: 1.55;
+    text-align: center;
+    padding: 8px 0;
+  }
+  .nd-ref-status strong { color: #f2efe6; }
+
+  .nd-ref-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #f2efe6;
+    color: #232421;
+    padding: 13px 22px;
+    border-radius: 0.25rem;
+    font-family: 'Raptor', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+  }
+  .nd-ref-toast.nd-ref-show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 480px) {
+    .nd-ref-btn { padding: 14px 18px; }
+  }
+</style>
+
+<div class="nd-ref-embed" id="nd-ref-embed">
+  <div class="nd-ref-card">
+    <div class="nd-ref-status">Pripremamo tvoj referral link…</div>
+  </div>
+</div>
+<div class="nd-ref-toast" id="nd-ref-toast">Link kopiran ✓</div>
+
+<script>
+(function () {
+  var CONFIG = {
+    apiUrl: 'https://nauci-dizajnu-referral.vercel.app/api/signup',
+    tagId: '18986077',
+    webinarUrl: 'https://naucidizajn.com/webinar-uiux-april-2026',
+    dashboardBaseUrl: 'https://app.naucidizajn.com',
+  };
+
+  var root = document.getElementById('nd-ref-embed');
+  var params = new URLSearchParams(window.location.search);
+
+  var isDemo = params.get('demo') === '1';
+  if (isDemo) {
+    setTimeout(function () {
+      renderCard({
+        shareUrl: CONFIG.webinarUrl + '?r=X7K2M9',
+        dashboardUrl: CONFIG.dashboardBaseUrl + '/?t=demo-token',
+      });
+    }, 200);
+    return;
+  }
+
+  // Data flow: Webflow's form redirect does NOT pass form data in the URL.
+  // landing-head.html stashes {email, name, ref} to sessionStorage on submit.
+  // Fallback order: URL params → sessionStorage → localStorage (ref only).
+  var stashed = readStashedSignup();
+  var email = getParam(['Email', 'email']) || stashed.email;
+  var name  = getParam(['Name', 'name'])   || stashed.name;
+  var ref   = getParam(['ref', 'Ref'])     || stashed.ref || getStoredRef();
+
+  if (!email) {
+    renderStatus('Nismo pročitali prijavu. <strong>Proveri email</strong> — referral link ti stiže tamo.');
+    return;
+  }
+
+  try { localStorage.setItem('nd_ref_email', email); } catch (e) {}
+
+  fetch(CONFIG.apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: email, name: name, ref: ref,
+      webinarUrl: CONFIG.webinarUrl, tagId: CONFIG.tagId,
+    }),
+  })
+  .then(function (res) {
+    if (!res.ok) throw new Error('status ' + res.status);
+    return res.json();
+  })
+  .then(renderCard)
+  .catch(function (err) {
+    console.error('[nd-ref] signup failed', err);
+    renderStatus('Problem pri generisanju linka. <strong>Proveri email</strong> — stiže ti tamo za par minuta.');
+  });
+
+  function renderCard(data) {
+    root.innerHTML =
+      '<div class="nd-ref-card">' +
+        '<div class="nd-ref-label">Tvoj referral link</div>' +
+        '<div class="nd-ref-row">' +
+          '<input class="nd-ref-input" id="nd-ref-input" value="' + esc(data.shareUrl) + '" readonly />' +
+          '<button class="nd-ref-btn" id="nd-ref-btn" type="button">Kopiraj</button>' +
+        '</div>' +
+        '<div class="nd-ref-footnote">' +
+          'Prati broj prijavljenih preko svog linka na <a href="' + esc(data.dashboardUrl) + '" target="_blank" rel="noopener">svojoj platformi</a>.' +
+        '</div>' +
+      '</div>';
+    document.getElementById('nd-ref-btn').addEventListener('click', onCopy);
+    document.getElementById('nd-ref-input').addEventListener('click', function (e) { e.target.select(); });
+  }
+
+  function renderStatus(html) {
+    root.innerHTML = '<div class="nd-ref-card"><div class="nd-ref-status">' + html + '</div></div>';
+  }
+
+  function onCopy() {
+    var btn = document.getElementById('nd-ref-btn');
+    var input = document.getElementById('nd-ref-input');
+    var done = function () {
+      btn.textContent = 'Kopirano ✓';
+      btn.classList.add('nd-ref-copied');
+      showToast();
+      setTimeout(function () {
+        btn.textContent = 'Kopiraj';
+        btn.classList.remove('nd-ref-copied');
+      }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(input.value).then(done, fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      input.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      done();
+    }
+  }
+
+  function showToast() {
+    var t = document.getElementById('nd-ref-toast');
+    t.classList.add('nd-ref-show');
+    setTimeout(function () { t.classList.remove('nd-ref-show'); }, 1800);
+  }
+
+  function getParam(keys) {
+    for (var i = 0; i < keys.length; i++) {
+      var v = params.get(keys[i]);
+      if (v && v.trim()) return v.trim();
+    }
+    return '';
+  }
+
+  function getStoredRef() {
+    try { return localStorage.getItem('nd_ref') || ''; } catch (e) { return ''; }
+  }
+
+  function readStashedSignup() {
+    try {
+      var raw = sessionStorage.getItem('nd_signup');
+      if (!raw) return {};
+      var obj = JSON.parse(raw);
+      return {
+        email: (obj && obj.email) || '',
+        name:  (obj && obj.name)  || '',
+        ref:   (obj && obj.ref)   || '',
+      };
+    } catch (e) { return {}; }
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+})();
+</script>

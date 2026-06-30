@@ -1,0 +1,324 @@
+<style>
+:root {
+  --nd-font-sans:"Raptor Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --nd-bela:#FFFFFF;
+  --nd-fluo:#DBFF00;
+  --nd-fluo-press:#C2E000;
+  --nd-maslina-200:#3D403C;
+  --nd-maslina-400:#232421;
+  --nd-maslina-300:#313330;
+  --nd-maslina-100:#797D73;
+  --nd-body-on-dark:#D3D3D3;
+  --nd-border-on-dark:rgba(255,255,255,0.14);
+  --nd-on-accent:var(--nd-maslina-400);
+  --nd-radius-md:8px;
+  --nd-radius-xl:24px;
+  --nd-dur:180ms;
+  --nd-ease:cubic-bezier(0.22,1,0.36,1);
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+  background:#070A01; font-family:var(--nd-font-sans); color:var(--nd-bela);
+  min-height:100vh; display:flex; flex-direction:column;
+}
+
+.ty{ flex:1; display:flex; align-items:center; justify-content:center; padding:56px 24px; }
+.ty-inner{ width:100%; max-width:620px; text-align:center; display:flex; flex-direction:column; align-items:center; }
+
+.ty-check{
+  width:72px; height:72px; border-radius:50%; background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:700;
+}
+.eyebrow{
+  margin-top:24px; font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--nd-fluo);
+}
+.ty-inner h1{
+  margin:12px 0 0; font-weight:500; font-size:clamp(34px,5.5vw,52px); line-height:1.05;
+  letter-spacing:-0.03em; text-wrap:balance;
+}
+.ty-sub{ margin:10px 0 0; max-width:480px; font-size:18px; line-height:1.6; color:var(--nd-body-on-dark); }
+.ty-sub strong{ color:var(--nd-bela); font-weight:600; }
+
+/* countdown */
+.countdown{ margin-top:32px; display:flex; gap:8px; }
+.cd-cell{
+  background:rgba(35,36,33,0.6); border:1px solid var(--nd-border-on-dark); border-radius:12px;
+  padding:10px 14px; min-width:62px; text-align:center;
+}
+.cd-cell.accent{ background:var(--nd-fluo); border-color:transparent; }
+.cd-num{ font-size:24px; font-weight:500; line-height:1; color:var(--nd-bela); font-variant-numeric:tabular-nums; }
+.cd-cell.accent .cd-num{ color:var(--nd-maslina-400); }
+.cd-label{ margin-top:5px; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--nd-body-on-dark); }
+.cd-cell.accent .cd-label{ color:var(--nd-maslina-300); }
+
+/* PRIMARY: WhatsApp */
+.wa-card{
+  margin-top:40px; width:100%; background:var(--nd-maslina-200);
+  border:1px solid var(--nd-border-on-dark); border-radius:var(--nd-radius-xl);
+  padding:clamp(28px,4vw,40px); text-align:center;
+}
+.wa-label{
+  display:inline-block; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--nd-maslina-400); background:var(--nd-fluo); padding:5px 12px; border-radius:999px;
+}
+.wa-card h2{ margin:16px 0 0; font-weight:600; font-size:clamp(24px,3.4vw,30px); letter-spacing:-0.02em; color:var(--nd-bela); }
+.wa-card p{ margin:12px auto 0; max-width:440px; font-size:16px; line-height:1.6; color:var(--nd-body-on-dark); }
+
+.cta{
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:20px 36px; border-radius:var(--nd-radius-md);
+  font-family:var(--nd-font-sans); font-weight:600; font-size:18px; line-height:24px;
+  letter-spacing:-0.01em; border:1px solid transparent;
+  background:var(--nd-fluo); color:var(--nd-on-accent);
+  text-decoration:none; cursor:pointer; white-space:nowrap;
+  transition:background var(--nd-dur) var(--nd-ease), transform var(--nd-dur) var(--nd-ease);
+}
+.cta:hover{ background:var(--nd-fluo-press); }
+.cta:active{ transform:scale(0.98); }
+.cta.full{ width:100%; margin-top:24px; }
+.cta svg{ flex:none; }
+
+/* secondary steps */
+.ty-secondary{
+  margin-top:32px; width:100%; display:flex; flex-direction:column; gap:14px;
+}
+.sec-item{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  font-size:15px; color:var(--nd-body-on-dark);
+}
+.sec-item .ico{
+  flex:none; width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.08);
+  border:1px solid var(--nd-border-on-dark); display:flex; align-items:center; justify-content:center;
+}
+.sec-item a{ color:var(--nd-fluo); text-decoration:none; font-weight:600; }
+.sec-item a:hover{ text-decoration:underline; }
+.dot-sep{ color:var(--nd-maslina-100); }
+
+/* topbar + progress */
+.ty-topbar{
+  width:100%; background:var(--nd-fluo); color:var(--nd-maslina-400);
+  text-align:center; padding:14px 24px;
+  font-size:clamp(13px,1.5vw,17px); font-weight:600; letter-spacing:.04em; text-transform:uppercase;
+}
+.ty-progress-wrap{ width:100%; padding:18px 24px 0; }
+.ty-progress-track{
+  max-width:1240px; margin:0 auto; height:46px; border-radius:14px;
+  background:rgba(255,255,255,0.05); border:1px solid var(--nd-border-on-dark); padding:5px;
+}
+.ty-progress-fill{
+  height:100%; width:66%; min-width:64px; border-radius:9px;
+  background:linear-gradient(90deg, var(--nd-fluo-press), var(--nd-fluo));
+  display:flex; align-items:center; justify-content:center;
+}
+.ty-progress-fill span{ color:var(--nd-maslina-400); font-weight:700; font-size:15px; }
+
+/* calendar card */
+.cal-card{
+  margin-top:26px; width:100%;
+  padding:0; display:flex; flex-direction:column; gap:16px; align-items:center;
+}
+.ty-mail{
+  margin-top:28px; display:flex; align-items:center; justify-content:center; gap:10px;
+  font-size:15px; color:var(--nd-body-on-dark);
+}
+.ty-mail .ico{
+  flex:none; width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.08);
+  border:1px solid var(--nd-border-on-dark); display:flex; align-items:center; justify-content:center;
+}
+.cal-head{ display:flex; align-items:center; gap:12px; }
+.cal-ico{
+  flex:none; width:42px; height:42px; border-radius:50%;
+  background:rgba(219,255,0,0.12); border:1px solid var(--nd-border-on-dark);
+  display:flex; align-items:center; justify-content:center;
+}
+.cal-title{ font-weight:600; font-size:16px; color:var(--nd-bela); }
+.cal-sub{ font-size:13px; color:var(--nd-body-on-dark); margin-top:2px; }
+.cal-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.btn-ghost{
+  display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:8px;
+  border:1px solid var(--nd-border-on-dark); background:rgba(255,255,255,0.04); color:var(--nd-bela);
+  font-family:var(--nd-font-sans); font-weight:600; font-size:14px; text-decoration:none; cursor:pointer;
+  transition:background var(--nd-dur) var(--nd-ease);
+}
+.btn-ghost:hover{ background:rgba(255,255,255,0.1); }
+
+/* VSL video */
+.vsl{
+  margin-top:28px; width:100%; aspect-ratio:16/9; border-radius:var(--nd-radius-xl);
+  background:#1C1D1A; border:1px solid var(--nd-border-on-dark);
+  display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;
+}
+.vsl-play{
+  width:72px; height:72px; border-radius:50%; background:var(--nd-fluo); color:var(--nd-maslina-400);
+  display:flex; align-items:center; justify-content:center;
+}
+.vsl-hint{ position:absolute; bottom:14px; left:0; right:0; text-align:center; font-size:11px; color:var(--nd-maslina-100); letter-spacing:.14em; text-transform:uppercase; }
+.vsl iframe, .vsl video{ width:100%; height:100%; border:0; display:block; }
+
+/* referral */
+.referral{
+  margin-top:24px; width:100%;
+  background:#2A2B28; border:1px solid var(--nd-border-on-dark); border-radius:var(--nd-radius-xl);
+  padding:clamp(24px,4vw,34px); text-align:center;
+}
+.referral-label{ font-size:13px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--nd-maslina-100); }
+.referral-row{ margin-top:18px; display:flex; gap:10px; }
+.referral-input{
+  flex:1; min-width:0; padding:14px 18px; border-radius:10px;
+  background:#1C1D1A; border:1px solid var(--nd-border-on-dark);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:16px; color:#fff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left;
+}
+.referral-copy{
+  flex:none; padding:0 26px; border-radius:10px; border:1px solid transparent;
+  background:var(--nd-fluo); color:var(--nd-maslina-400); font-family:var(--nd-font-sans);
+  font-weight:600; font-size:16px; cursor:pointer; transition:background var(--nd-dur) var(--nd-ease);
+}
+.referral-copy:hover{ background:var(--nd-fluo-press); }
+.referral-copy:disabled{ opacity:.5; cursor:default; }
+.referral-note{ margin:16px auto 0; max-width:430px; font-size:15px; line-height:1.5; color:var(--nd-body-on-dark); }
+.referral-note a{ color:var(--nd-fluo); font-weight:600; text-decoration:underline; }
+
+.site-foot{ text-align:center; padding:24px; font-size:13px; color:var(--nd-maslina-100); }
+
+@media (max-width:480px){
+  .ty-secondary .sec-item{ flex-direction:column; gap:4px; }
+  .referral-row{ flex-direction:column; }
+  .referral-copy{ padding:14px; }
+}
+</style>
+
+<div class="ty-topbar">Ne zatvaraj ovu stranicu jo&#353; uvek</div>
+<div class="ty-progress-wrap">
+  <div class="ty-progress-track">
+    <div class="ty-progress-fill"><span>66%</span></div>
+  </div>
+</div>
+
+<main class="ty">
+  <div class="ty-inner">
+    <div class="ty-check">&#10003;</div>
+    <div class="eyebrow">Prijava uspe&#353;na</div>
+    <h1>Tvoje mesto je rezervisano</h1>
+    <p class="ty-sub">Vidimo se u <strong>&#269;etvrtak, 9. jul u 19h</strong>, u&#382;ivo preko Zoom-a.</p>
+
+    <div class="ty-mail">
+      <span class="ico">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--nd-fluo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </span>
+      <span>Poslali smo ti potvrdu na email <span style="color:var(--nd-maslina-100);">(proveri promotions i spam)</span></span>
+    </div>
+
+    <!-- VSL: zameni ovaj placeholder svojim embedom (YouTube/Vimeo/Wistia iframe ili <video>) -->
+    <div class="vsl">
+      <div class="vsl-play">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="vsl-hint">Video</div>
+    </div>
+
+    <div class="referral">
+      <div class="referral-label">Tvoj referral link</div>
+      <div class="referral-row">
+        <input class="referral-input" id="ref-link" type="text" readonly value="Pripremam tvoj link&#8230;">
+        <button class="referral-copy" id="ref-copy" type="button" disabled>Kopiraj</button>
+      </div>
+      <p class="referral-note">Prati broj prijavljenih preko svog linka na <a id="ref-dash" href="#" target="_blank" rel="noopener">svojoj platformi</a>.</p>
+    </div>
+
+    <div class="wa-card">
+      <span class="wa-label">Najva&#382;niji korak</span>
+      <h2>U&#273;i u WhatsApp grupu</h2>
+      <p>Tu &#353;aljem Zoom link i podsetnik pred sam start, da ne propusti&#353; po&#269;etak. Bez ovoga se lako zaboravi.</p>
+      <a class="cta full" href="#" id="wa-btn" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.477-.967zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+        U&#273;i u WhatsApp grupu
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot">&#169; 2026 &#183; AI dizajnira, ti zara&#273;uje&#353;</footer>
+
+<script>
+/* ===== WhatsApp link ===== */
+var WHATSAPP_URL = "https://chat.whatsapp.com/LwhLYsmwuODLi06Nz19b5A?s=cl&p=i&mlu=0";
+(function(){
+  var wa = document.getElementById("wa-btn");
+  if (WHATSAPP_URL && WHATSAPP_URL.indexOf("XXXX") === -1) wa.href = WHATSAPP_URL;
+  else wa.addEventListener("click", function(e){ e.preventDefault(); alert("Ubaci WhatsApp invite link u WHATSAPP_URL u kodu."); });
+})();
+
+/* =========================================================================
+   REFERRAL \u2014 generi\u0161e pravi link preko /api/signup (Supabase-only mod)
+
+   Kit NE diramo ovde: tagId se NE \u0161alje -> signup.js radi kitEnabled=false
+   (samo Supabase upsert + vra\u0107a ref_code/dashboard/share). Kit je u Make-u,
+   pa nema duplog upisa kontakta.
+
+   Podatke {email,name,ref} \u010dita iz sessionStorage (landing ih sklonio na submit;
+   Webflow redirect bri\u0161e ih iz URL-a), uz fallback na URL params.
+   ========================================================================= */
+(function(){
+  var CONFIG = {
+    apiUrl: "https://nauci-dizajnu-referral.vercel.app/api/signup",
+    webinarUrl: "https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-webinar-jul-2026"
+  };
+
+  var input = document.getElementById("ref-link");
+  var btn   = document.getElementById("ref-copy");
+  var dash  = document.getElementById("ref-dash");
+  if (!input || !btn) return;
+
+  var params = new URLSearchParams(window.location.search);
+  function fromParams(keys){ for (var i=0;i<keys.length;i++){ var v=params.get(keys[i]); if (v && v.trim()) return v.trim(); } return ""; }
+  function stashed(){
+    try { var o = JSON.parse(sessionStorage.getItem("nd_signup") || "{}"); return o || {}; } catch(e){ return {}; }
+  }
+  function storedRef(){ try { return sessionStorage.getItem("nd_ref") || ""; } catch(e){ return ""; } }
+
+  var s = stashed();
+  var email = fromParams(["Email","email"]) || s.email || "";
+  var name  = fromParams(["Name","name"])   || s.name  || "";
+  var ref   = fromParams(["ref","Ref"])     || s.ref   || storedRef();
+
+  function fail(msg){
+    input.value = msg || "Link sti\u017ee na tvoj email.";
+    btn.disabled = true;
+  }
+
+  if (!email) { fail("Link sti\u017ee na tvoj email."); return; }
+
+  fetch(CONFIG.apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, name: name, ref: ref, webinarUrl: CONFIG.webinarUrl })
+  })
+  .then(function(res){ if (!res.ok) throw new Error("status " + res.status); return res.json(); })
+  .then(function(data){
+    if (!data || !data.shareUrl) throw new Error("no shareUrl");
+    input.value = data.shareUrl;
+    btn.disabled = false;
+    if (dash && data.dashboardUrl) dash.href = data.dashboardUrl;
+  })
+  .catch(function(err){
+    console.error("[nd-ref] signup failed", err);
+    fail("Link sti\u017ee na tvoj email.");
+  });
+
+  /* copy */
+  btn.addEventListener("click", function(){
+    if (btn.disabled) return;
+    var val = input.value;
+    function done(){ var t=btn.textContent; btn.textContent="Kopirano"; setTimeout(function(){ btn.textContent=t; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(val).then(done).catch(function(){ input.select(); document.execCommand("copy"); done(); });
+    } else {
+      input.select(); document.execCommand("copy"); done();
+    }
+  });
+})();
+</script>
