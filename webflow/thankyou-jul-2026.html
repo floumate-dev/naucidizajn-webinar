@@ -316,7 +316,9 @@ var WHATSAPP_URL = "https://chat.whatsapp.com/LwhLYsmwuODLi06Nz19b5A?s=cl&p=i&ml
   .then(function(res){ if (!res.ok) throw new Error("status " + res.status); return res.json(); })
   .then(function(data){
     if (!data || !data.shareUrl) throw new Error("no shareUrl");
-    input.value = data.shareUrl;
+    // referral saobracaj se trackuje kao source=referral (razlikuje se od placenih reklama)
+    var sep = data.shareUrl.indexOf("?") > -1 ? "&" : "?";
+    input.value = data.shareUrl + sep + "source=referral&specificsource=referral_thank_you";
     btn.disabled = false;
     if (dash && data.dashboardUrl) dash.href = data.dashboardUrl;
   })
