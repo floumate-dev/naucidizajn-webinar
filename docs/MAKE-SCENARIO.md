@@ -18,12 +18,18 @@ Content-Type: `application/json`, fire-and-forget (keepalive):
   "phone": "+381641234567",
   "ref": "X7K2M9",
   "source": "instagram",
-  "specificsource": "instagram_video_bandera"
+  "specificsource": "instagram_video_bandera",
+  "utm_source": "120210...",
+  "utm_medium": "120211...",
+  "utm_campaign": "120212..."
 }
 ```
 
 > `vokativ` se već računa na landing-u (inline) — Make NEMA HTTP korak za vokativ.
-> `source`/`specificsource` su prisutni samo ako su bili u landing URL-u (`?source=&specificsource=`).
+> Tracking polja (`source`, `specificsource`, `utm_source`, `utm_medium`, `utm_campaign`) su
+> prisutna samo ako su bila u landing URL-u. UTM dolaze sa Meta reklama
+> (`utm_source={{campaign.id}}&utm_medium={{adset.id}}&utm_campaign={{ad.id}}`).
+> Ista tracking polja idu i u AEvent (customtags).
 
 ## Koraci scenarija
 
@@ -32,7 +38,8 @@ Content-Type: `application/json`, fire-and-forget (keepalive):
 2. **Kit → Create/Update Subscriber:**
    - `email_address` = `{{email}}`
    - `first_name` = `{{first_name}}`
-   - custom fields: `last_name`, `vokativ`, `phone`, `source`, `specificsource`, `ref`
+   - custom fields: `last_name`, `vokativ`, `phone`, `source`, `specificsource`, `ref`,
+     `utm_source`, `utm_medium`, `utm_campaign`
 3. **Kit → Add tag to subscriber:** July webinar tag (po `email`/subscriber id). Tag može da
    triggeruje Kit automation ako je koristiš (npr. welcome bez Zoom linka — link šalje AEvent).
 4. (Opciono) error handling: ako Kit vrati non-2xx, loguj/alert.
@@ -40,7 +47,8 @@ Content-Type: `application/json`, fire-and-forget (keepalive):
 ## Kit setup (pre scenarija)
 
 Napravi **custom fields** (Subscribers → Custom Fields): `vokativ`, `phone`, `source`,
-`specificsource`, `ref` (i `last_name` ako ne postoji). Napravi **tag** za July webinar.
+`specificsource`, `ref`, `utm_source`, `utm_medium`, `utm_campaign` (i `last_name` ako ne postoji).
+Napravi **tag** za July webinar.
 
 ## Podela uloga (bitno)
 

@@ -78,14 +78,14 @@ Vercel token, AEvent REST JWT token. Ove drži kao env varijable / van git-a.
 
 ```
 LANDING (Webflow custom code: webflow/landing-jul-2026.html)
-  URL params: ?source= ?specificsource= (ad tracking), ?r=CODE (referral)
+  URL params: ?source= ?specificsource= ?utm_source= ?utm_medium= ?utm_campaign= (ad tracking), ?r=CODE (referral)
   -> capture u sessionStorage (nd_trk, nd_ref)
   Modal prijava (JS-built, NIJE <form>; submit je <a id="ndm-submit">)
   Polja: #ndm-ime (Ime i prezime), #ndm-email, #ndm-country (+pozivni broj), #ndm-telefon
   Na submit (validacija OK):
     1. stash {email,name,ref} u sessionStorage (nd_signup) — za thank-you referral widget
     2. Make webhook (fetch JSON keepalive, fire-and-forget):
-         { name, first_name, last_name, vokativ, email, phone(E.164), ref, source, specificsource }
+         { name, first_name, last_name, vokativ, email, phone(E.164), ref, source, specificsource, utm_source, utm_medium, utm_campaign }
          (vokativ se računa INLINE u browseru — vidi #6)
     3. AEvent registracija (fetch urlencoded, AWAITED):
          POST /api-registration  body: secret, wtl, name, email, phone, source, specificsource, ref
@@ -130,8 +130,8 @@ POSLE WEBINARA
   `POST /api/registrants` = 403 (registracija ide SAMO preko /api-registration).
 
 ### Make → Kit (docs/MAKE-SCENARIO.md)
-- Webhook prima JSON sa `name, first_name, last_name, vokativ, email, phone, ref, source, specificsource`.
-- Kit custom fields koje treba napraviti: `vokativ`, `phone`, `source`, `specificsource`, `ref`
+- Webhook prima JSON sa `name, first_name, last_name, vokativ, email, phone, ref, source, specificsource, utm_source, utm_medium, utm_campaign`.
+- Kit custom fields koje treba napraviti: `vokativ`, `phone`, `source`, `specificsource`, `ref`, `utm_source`, `utm_medium`, `utm_campaign`
   (+ `last_name` ako ne postoji). Pa apply July tag (triggeruje automation ako se koristi).
 - **Webinar link NE ide iz Make-a** — AEvent ga šalje. Kit = lista + nurture.
 
