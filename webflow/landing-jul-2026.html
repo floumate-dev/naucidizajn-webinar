@@ -431,11 +431,14 @@ body.modal-open{ overflow:hidden; }
     if (r.length >= 4) sessionStorage.setItem("nd_ref", r);
   } catch(e){}
   try {
-    var trk = {
-      source: (params.get("source") || "").trim().slice(0,120),
-      specificsource: (params.get("specificsource") || "").trim().slice(0,120)
-    };
-    if (trk.source || trk.specificsource) sessionStorage.setItem("nd_trk", JSON.stringify(trk));
+    // tracking params iz URL-a -> Make + AEvent. source/specificsource + Meta UTM (campaign/adset/ad id).
+    var TRK_KEYS = ["source","specificsource","utm_source","utm_medium","utm_campaign"];
+    var trk = {};
+    for (var ti=0; ti<TRK_KEYS.length; ti++) {
+      var tv = (params.get(TRK_KEYS[ti]) || "").trim().slice(0,200);
+      if (tv) trk[TRK_KEYS[ti]] = tv;
+    }
+    if (Object.keys(trk).length) sessionStorage.setItem("nd_trk", JSON.stringify(trk));
   } catch(e){}
 
   function getRef(){ try { return sessionStorage.getItem("nd_ref") || ""; } catch(e){ return ""; } }
@@ -670,8 +673,7 @@ body.modal-open{ overflow:hidden; }
     try {
       var mk = { name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
                  email:emailVal, phone:phoneE164, ref:ref };
-      if(trk.source) mk.source = String(trk.source);
-      if(trk.specificsource) mk.specificsource = String(trk.specificsource);
+      for (var mkk in trk) { if (Object.prototype.hasOwnProperty.call(trk, mkk)) mk[mkk] = String(trk[mkk]); }
       fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(mk), keepalive:true }).catch(function(){});
     } catch(_){}
 
@@ -701,8 +703,7 @@ body.modal-open{ overflow:hidden; }
     aeBody.append("name", fullName);
     aeBody.append("email", emailVal);
     aeBody.append("phone", phoneE164);
-    if(trk.source) aeBody.append("source", String(trk.source));
-    if(trk.specificsource) aeBody.append("specificsource", String(trk.specificsource));
+    for (var aek in trk) { if (Object.prototype.hasOwnProperty.call(trk, aek)) aeBody.append(aek, String(trk[aek])); }
     if(ref) aeBody.append("ref", ref);
 
     var ctrl = (typeof AbortController!=="undefined") ? new AbortController() : null;
