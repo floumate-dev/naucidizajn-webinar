@@ -63,7 +63,7 @@ docs/
 | AEvent registration endpoint | `https://42253777.aevent.online/api-registration` |
 | AEvent `secret` (client-side, public) | `UWKciZ4h9DKp92E` |
 | AEvent REST API base | `https://42253777.aevent.online/api/` |
-| WhatsApp grupa | `https://chat.whatsapp.com/LwhLYsmwuODLi06Nz19b5A?s=cl&p=i&mlu=0` |
+| WhatsApp grupa | `https://chat.whatsapp.com/HEkDXRydax7HG2mBr19tBf?mode=gi_t` |
 | Referral API | `https://nauci-dizajnu-referral.vercel.app/api/signup` |
 | Dashboard | `https://app.naucidizajn.com/?t=<token>` |
 | Supabase project | `https://bfnutgejcpqxghyslxur.supabase.co` (ref `bfnutgejcpqxghyslxur`) |

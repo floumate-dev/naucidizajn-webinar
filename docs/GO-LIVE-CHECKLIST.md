@@ -34,7 +34,7 @@ Redosled za lansiranje. Označi kako ideš.
 - [ ] Test: prijava → Make izvrši → Kit subscriber sa popunjenim poljima.
 
 ## 5. WhatsApp
-- [ ] Grupa aktivna; invite link u thank-you-u tačan (`chat.whatsapp.com/LwhLYsmwuODLi06Nz19b5A...`).
+- [ ] Grupa aktivna; invite link u thank-you-u tačan (`chat.whatsapp.com/HEkDXRydax7HG2mBr19tBf?mode=gi_t`).
 - [ ] U grupi (opis/pin) stoji Zoom/join link i raspored podsetnika.
 
 ## 6. Webflow
