@@ -120,7 +120,7 @@ body{ background:#070A01; font-family:var(--nd-font-sans); color:var(--nd-bela);
 <script>
 (function(){
   /* ---------- KONFIG ---------- */
-  var WAITLIST_WEBHOOK = "PASTE_WEBHOOK_URL"; // <-- ubaci Make/Kit webhook; dok je placeholder radi bez slanja
+  var WAITLIST_WEBHOOK = "https://hook.eu2.make.com/b2p8iebokmr6rci24h2rlrt5p9fcxtex"; // Make webhook
   /* ---------------------------- */
 
   /* zemlje (Balkan + ostalo), isto kao na landing-u */
@@ -205,6 +205,27 @@ body{ background:#070A01; font-family:var(--nd-font-sans); color:var(--nd-bela);
     if(num.indexOf("00")===0) return "+"+num.slice(2);
     return (dial||"+381")+num.replace(/^0+/,"");
   }
+  /* Vokativ (srpski) - inline, isto kao na landing-u */
+  var VOK_DICT = {
+    'petar':'Petre','aleksandar':'Aleksandre','vuk':'Vuk','novak':'Novak','tarik':'Tarik','faruk':'Faruk',
+    'daniel':'Daniel','gabriel':'Gabriel','mihael':'Mihael','rafael':'Rafael','samuel':'Samuel','manuel':'Manuel','noel':'Noel',
+    'kevin':'Kevin','brajan':'Brajan','dilan':'Dilan','denis':'Denis',
+    'ines':'Ines','nives':'Nives','karmen':'Karmen','doris':'Doris','iris':'Iris','ingrid':'Ingrid',
+    'dolores':'Dolores','nikol':'Nikol','merjem':'Merjem'
+  };
+  function vokativ(raw){
+    if(!raw) return '';
+    var nm=String(raw).trim().split(/\s+/)[0];
+    if(!nm) return '';
+    nm=nm.charAt(0).toLocaleUpperCase('sr')+nm.slice(1).toLocaleLowerCase('sr');
+    var key=nm.toLocaleLowerCase('sr');
+    if(VOK_DICT[key]) return VOK_DICT[key];
+    var last=nm.slice(-1).toLowerCase();
+    if('aeiou'.indexOf(last)!==-1) return nm;
+    if('kgh'.indexOf(last)!==-1) return nm;
+    if(last==='j') return nm;
+    return nm+'e';
+  }
   /* STRIKTNA validacija email-a: local@domen.tld (tld >=2 slova), bez razmaka, max 254 */
   function vEmail(v){
     v=(v||"").trim();
@@ -239,8 +260,9 @@ body{ background:#070A01; font-family:var(--nd-font-sans); color:var(--nd-bela);
     if(!ok){ showError("Proveri unos \u2014 ime, ispravan email i validan broj telefona su obavezni."); return; }
 
     submitted=true;
-    var sp=splitName(ime.value.trim().replace(/\s+/g," "));
-    var payload={ name:ime.value.trim().replace(/\s+/g," "), first_name:sp.first, last_name:sp.last,
+    var fullName=ime.value.trim().replace(/\s+/g," ");
+    var sp=splitName(fullName);
+    var payload={ name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
                   email:email.value.trim().toLowerCase(), phone:buildPhone(country.value, tel.value) };
 
     if(WAITLIST_WEBHOOK && WAITLIST_WEBHOOK.indexOf("PASTE_")!==0){
