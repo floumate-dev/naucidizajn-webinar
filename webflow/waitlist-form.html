@@ -1,0 +1,252 @@
+<!-- Sakrij/ukloni iClosed Lift Widget SAMO na ovoj stranici -->
+<style>
+  iframe[src*="iclosed.io"],
+  [id*="iclosed" i],
+  [class*="iclosed" i],
+  [data-cta-widget] { display: none !important; }
+</style>
+<script>
+(function () {
+  function nuke() {
+    document.querySelectorAll('iframe[src*="iclosed.io"], [id*="iclosed" i], [class*="iclosed" i], [data-cta-widget]').forEach(function (el) { el.remove(); });
+  }
+  nuke();
+  var obs = new MutationObserver(nuke);
+  try { obs.observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+  setTimeout(function () { obs.disconnect(); }, 20000);
+})();
+</script>
+
+<style>
+:root{
+  --bg:#232421;            /* olive-400 (hero bg) */
+  --card:#3D403C;          /* olive-200 (inputi) */
+  --fluo:#DBFF00;
+  --fluo-press:#C2E000;
+  --white:#FFFFFF;
+  --muted:#D3D3D3;
+  --border:rgba(255,255,255,0.14);
+  --font-sans:"Raptor TTF","Raptor Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-serif:"Saol TTF",Georgia,"Times New Roman",serif;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{ background:var(--bg); font-family:var(--font-sans); color:var(--white); }
+
+.wl-page{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:clamp(64px,12vh,140px) 20px clamp(48px,9vw,96px); text-align:center; }
+.wl-inner{ width:100%; max-width:1000px; display:flex; flex-direction:column; align-items:center; }
+#wl-form{ width:100%; display:flex; flex-direction:column; align-items:center; }
+
+.wl-title{ margin:0; max-width:900px; font-weight:500; font-size:clamp(38px,8vw,96px); line-height:1.05; letter-spacing:-0.03em; color:var(--white); text-wrap:balance; }
+.wl-title .accent{ font-family:var(--font-serif); font-style:italic; font-weight:500; color:var(--fluo); }
+.wl-sub{ margin:clamp(20px,3vw,28px) 0 0; max-width:640px; font-size:clamp(16px,1.8vw,18px); line-height:1.55; color:var(--muted); }
+
+.wl-form{ width:100%; max-width:520px; margin:clamp(28px,4vw,40px) auto 0; display:flex; flex-direction:column; gap:12px; }
+.wl-input{
+  width:100%; background:var(--card); border:1px solid transparent; border-radius:4px;
+  color:var(--white); font-family:inherit; font-size:16px; padding:18px 22px; outline:none;
+  transition:border-color .18s ease;
+}
+.wl-input::placeholder{ color:#9a9b96; }
+.wl-input:focus{ border-color:var(--fluo); }
+
+.wl-phone-row{
+  display:flex; gap:0; width:100%; background:var(--card);
+  border:1px solid transparent; border-radius:4px; overflow:hidden; transition:border-color .18s ease;
+}
+.wl-phone-row:focus-within{ border-color:var(--fluo); }
+.wl-country{
+  flex:0 0 auto; width:118px; background-color:transparent; color:var(--white);
+  border:none; border-right:1px solid var(--border); border-radius:0;
+  font-family:inherit; font-size:15px; padding:18px 32px 18px 20px; outline:none; cursor:pointer;
+  appearance:none; -webkit-appearance:none; text-overflow:ellipsis; white-space:nowrap;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%23DBFF00'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.wl-phone-input{ flex:1 1 auto; min-width:0; background:transparent; border:none; color:var(--white); font-family:inherit; font-size:16px; padding:18px 22px; outline:none; }
+.wl-country option, .wl-country optgroup{ background:var(--card); color:#fff; }
+.wl-country optgroup{ color:var(--fluo); font-weight:700; font-style:normal; }
+
+.wl-err{ display:none; font-size:13px; line-height:1.45; color:#FFB4B4; background:rgba(229,72,77,0.12); border:1px solid rgba(229,72,77,0.4); border-radius:4px; padding:10px 12px; }
+
+.wl-btn{
+  width:100%; margin-top:6px; display:flex; align-items:center; justify-content:center; gap:10px;
+  background:var(--fluo); color:var(--bg); border:1px solid transparent; border-radius:4px;
+  font-family:inherit; font-weight:600; font-size:17px; letter-spacing:-0.01em; padding:19px 24px; cursor:pointer;
+  transition:background .18s ease, transform .1s ease;
+}
+.wl-btn:hover{ background:var(--fluo-press); }
+.wl-btn:active{ transform:scale(0.99); }
+</style>
+
+<div class="wl-page">
+  <div class="wl-inner">
+    <div id="wl-form">
+      <h1 class="wl-title">Prijavi se na <span class="accent">listu &#269;ekanja</span></h1>
+      <p class="wl-sub">Na&#353;a AI Web Dizajner zajednica je PUNA i nema vi&#353;e mesta (za sad). Ljudi od akcije su unutra, ve&#263; prave svoje prve sajtove i kre&#263;u u potragu za klijentima. Do tada mo&#382;e&#353; da se prijavi&#353; da ti javimo kad otvorimo ponovo.</p>
+
+      <div class="wl-form">
+        <input id="wl-ime" class="wl-input" type="text" placeholder="Ime i prezime" autocomplete="name">
+        <input id="wl-email" class="wl-input" type="email" inputmode="email" placeholder="Email" autocomplete="email">
+        <div class="wl-phone-row">
+          <select id="wl-country" class="wl-country" aria-label="Pozivni broj"></select>
+          <input id="wl-telefon" class="wl-phone-input" type="tel" inputmode="tel" placeholder="Broj telefona" autocomplete="tel">
+        </div>
+        <div id="wl-err" class="wl-err"></div>
+        <button id="wl-submit" class="wl-btn" type="button">Prijavi se <span>&#8594;</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ---------- KONFIG ---------- */
+  var WAITLIST_WEBHOOK = "https://hook.eu2.make.com/b2p8iebokmr6rci24h2rlrt5p9fcxtex"; // Make webhook
+  var THANKYOU_URL = "/ai-web-designer-waitlist-thank-you"; // redirect posle prijave (isti domen)
+  /* ---------------------------- */
+
+  var COUNTRIES = {
+    Balkan: [
+      ["+385","HR","\ud83c\udded\ud83c\uddf7 +385"],["+387","BA","\ud83c\udde7\ud83c\udde6 +387"],["+381","RS","\ud83c\uddf7\ud83c\uddf8 +381"],
+      ["+382","ME","\ud83c\uddf2\ud83c\uddea +382"],["+386","SI","\ud83c\uddf8\ud83c\uddee +386"],["+389","MK","\ud83c\uddf2\ud83c\uddf0 +389"],
+      ["+383","XK","\ud83c\uddfd\ud83c\uddf0 +383"],["+355","AL","\ud83c\udde6\ud83c\uddf1 +355"]
+    ],
+    Ostalo: [
+      ["+61","AU","\ud83c\udde6\ud83c\uddfa Australija (+61)"],["+43","AT","\ud83c\udde6\ud83c\uddf9 Austrija (+43)"],["+32","BE","\ud83c\udde7\ud83c\uddea Belgija (+32)"],
+      ["+55","BR","\ud83c\udde7\ud83c\uddf7 Brazil (+55)"],["+359","BG","\ud83c\udde7\ud83c\uddec Bugarska (+359)"],["+420","CZ","\ud83c\udde8\ud83c\uddff \u010ce\u0161ka (+420)"],
+      ["+45","DK","\ud83c\udde9\ud83c\uddf0 Danska (+45)"],["+20","EG","\ud83c\uddea\ud83c\uddec Egipat (+20)"],["+63","PH","\ud83c\uddf5\ud83c\udded Filipini (+63)"],
+      ["+358","FI","\ud83c\uddeb\ud83c\uddee Finska (+358)"],["+33","FR","\ud83c\uddeb\ud83c\uddf7 Francuska (+33)"],["+30","GR","\ud83c\uddec\ud83c\uddf7 Gr\u010dka (+30)"],
+      ["+91","IN","\ud83c\uddee\ud83c\uddf3 Indija (+91)"],["+62","ID","\ud83c\uddee\ud83c\udde9 Indonezija (+62)"],["+353","IE","\ud83c\uddee\ud83c\uddea Irska (+353)"],
+      ["+39","IT","\ud83c\uddee\ud83c\uddf9 Italija (+39)"],["+972","IL","\ud83c\uddee\ud83c\uddf1 Izrael (+972)"],["+81","JP","\ud83c\uddef\ud83c\uddf5 Japan (+81)"],
+      ["+27","ZA","\ud83c\uddff\ud83c\udde6 Ju\u017enoafri\u010dka R. (+27)"],["+1","CA","\ud83c\udde8\ud83c\udde6 Kanada (+1)"],["+86","CN","\ud83c\udde8\ud83c\uddf3 Kina (+86)"],
+      ["+36","HU","\ud83c\udded\ud83c\uddfa Ma\u0111arska (+36)"],["+60","MY","\ud83c\uddf2\ud83c\uddfe Malezija (+60)"],["+52","MX","\ud83c\uddf2\ud83c\uddfd Meksiko (+52)"],
+      ["+31","NL","\ud83c\uddf3\ud83c\uddf1 Holandija (+31)"],["+47","NO","\ud83c\uddf3\ud83c\uddf4 Norve\u0161ka (+47)"],["+49","DE","\ud83c\udde9\ud83c\uddea Nema\u010dka (+49)"],
+      ["+48","PL","\ud83c\uddf5\ud83c\uddf1 Poljska (+48)"],["+351","PT","\ud83c\uddf5\ud83c\uddf9 Portugal (+351)"],["+40","RO","\ud83c\uddf7\ud83c\uddf4 Rumunija (+40)"],
+      ["+7","RU","\ud83c\uddf7\ud83c\uddfa Rusija (+7)"],["+1","US","\ud83c\uddfa\ud83c\uddf8 SAD (+1)"],["+966","SA","\ud83c\uddf8\ud83c\udde6 Saudijska Arabija (+966)"],
+      ["+65","SG","\ud83c\uddf8\ud83c\uddec Singapur (+65)"],["+421","SK","\ud83c\uddf8\ud83c\uddf0 Slova\u010dka (+421)"],["+34","ES","\ud83c\uddea\ud83c\uddf8 \u0160panija (+34)"],
+      ["+46","SE","\ud83c\uddf8\ud83c\uddea \u0160vedska (+46)"],["+41","CH","\ud83c\udde8\ud83c\udded \u0160vajcarska (+41)"],["+66","TH","\ud83c\uddf9\ud83c\udded Tajland (+66)"],
+      ["+90","TR","\ud83c\uddf9\ud83c\uddf7 Turska (+90)"],["+971","AE","\ud83c\udde6\ud83c\uddea UAE (+971)"],["+380","UA","\ud83c\uddfa\ud83c\udde6 Ukrajina (+380)"],
+      ["+44","GB","\ud83c\uddec\ud83c\udde7 Velika Britanija (+44)"],["+84","VN","\ud83c\uddfb\ud83c\uddf3 Vijetnam (+84)"]
+    ]
+  };
+  var NATLEN = {
+    RS:[8,9], HR:[8,9], BA:[8,8], ME:[8,8], SI:[8,9], MK:[8,8], XK:[8,8], AL:[8,9], BG:[8,9],
+    DE:[10,11], AT:[10,13], CH:[9,9], IT:[9,11], FR:[9,9], NL:[9,9], BE:[8,9], ES:[9,9], PT:[9,9],
+    GB:[10,10], IE:[9,9], SE:[7,10], NO:[8,8], DK:[8,8], FI:[6,12], PL:[9,9], CZ:[9,9], SK:[9,9],
+    HU:[9,9], RO:[9,9], GR:[10,10], RU:[10,10], UA:[9,9], TR:[10,10], US:[10,10], CA:[10,10]
+  };
+  var PLACE = {
+    RS:'6x xxx xxx', HR:'91 123 4567', BA:'61 234 567', ME:'67 123 456', SI:'31 234 567',
+    MK:'70 123 456', XK:'44 123 456', AL:'66 123 4567', DE:'1512 3456789', AT:'660 1234567',
+    IT:'312 345 6789', FR:'6 12 34 56 78', GB:'7400 123456', US:'201 555 0123', CH:'78 123 45 67'
+  };
+
+  var country=document.getElementById("wl-country");
+  var ime=document.getElementById("wl-ime");
+  var email=document.getElementById("wl-email");
+  var tel=document.getElementById("wl-telefon");
+  var phoneRow=tel.parentElement;
+  var submitBtn=document.getElementById("wl-submit");
+  var errBox=document.getElementById("wl-err");
+
+  function opts(list){ return list.map(function(o){ return '<option value="'+o[0]+'" data-country="'+o[1]+'"'+(o[1]==="RS"?" selected":"")+'>'+o[2]+'</option>'; }).join(""); }
+  country.innerHTML='<optgroup label="Balkan">'+opts(COUNTRIES.Balkan)+'</optgroup><optgroup label="Ostalo">'+opts(COUNTRIES.Ostalo)+'</optgroup>';
+
+  function selCountry(){ var o=country.options[country.selectedIndex]; return o?o.getAttribute("data-country"):"RS"; }
+  function setPlaceholder(){ tel.placeholder=PLACE[selCountry()]||"Broj telefona"; }
+  country.addEventListener("change", setPlaceholder);
+
+  function applyCC(code){
+    if(!code) return false; code=String(code).trim().toUpperCase();
+    if(!/^[A-Z]{2}$/.test(code)) return false;
+    var o=country.querySelector('option[data-country="'+code+'"]');
+    if(o){ o.selected=true; country.value=o.value; setPlaceholder(); return true; }
+    return false;
+  }
+  if(typeof fetch==="function"){
+    var gt=function(){ return (window.AbortSignal&&AbortSignal.timeout)?AbortSignal.timeout(2500):undefined; };
+    var G=[
+      function(){ return fetch("https://get.geojs.io/v1/ip/country.json",{signal:gt()}).then(function(r){return r.ok?r.json():null;}).then(function(j){return j&&j.country;}); },
+      function(){ return fetch("https://ipwho.is/?fields=country_code",{signal:gt()}).then(function(r){return r.ok?r.json():null;}).then(function(j){return j&&j.country_code;}); },
+      function(){ return fetch("https://ipapi.co/country/",{signal:gt()}).then(function(r){return r.ok?r.text():null;}); }
+    ];
+    (function tg(i){ if(i>=G.length) return; G[i]().then(function(c){ if(!applyCC(c)) tg(i+1); }).catch(function(){ tg(i+1); }); })(0);
+  }
+
+  function buildPhone(dial, raw){
+    var num=String(raw||"").replace(/[\s\-().]/g,"");
+    if(!num) return "";
+    if(num.charAt(0)==="+") return num;
+    if(num.indexOf("00")===0) return "+"+num.slice(2);
+    return (dial||"+381")+num.replace(/^0+/,"");
+  }
+  /* Vokativ (srpski) - inline, isto kao na landing-u */
+  var VOK_DICT = {
+    'petar':'Petre','aleksandar':'Aleksandre','vuk':'Vuk','novak':'Novak','tarik':'Tarik','faruk':'Faruk',
+    'daniel':'Daniel','gabriel':'Gabriel','mihael':'Mihael','rafael':'Rafael','samuel':'Samuel','manuel':'Manuel','noel':'Noel',
+    'kevin':'Kevin','brajan':'Brajan','dilan':'Dilan','denis':'Denis',
+    'ines':'Ines','nives':'Nives','karmen':'Karmen','doris':'Doris','iris':'Iris','ingrid':'Ingrid',
+    'dolores':'Dolores','nikol':'Nikol','merjem':'Merjem'
+  };
+  function vokativ(raw){
+    if(!raw) return '';
+    var nm=String(raw).trim().split(/\s+/)[0];
+    if(!nm) return '';
+    nm=nm.charAt(0).toLocaleUpperCase('sr')+nm.slice(1).toLocaleLowerCase('sr');
+    var key=nm.toLocaleLowerCase('sr');
+    if(VOK_DICT[key]) return VOK_DICT[key];
+    var last=nm.slice(-1).toLowerCase();
+    if('aeiou'.indexOf(last)!==-1) return nm;
+    if('kgh'.indexOf(last)!==-1) return nm;
+    if(last==='j') return nm;
+    return nm+'e';
+  }
+  function vEmail(v){
+    v=(v||"").trim();
+    if(!v || v.length>254) return false;
+    return /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,}$/.test(v);
+  }
+  function vPhone(dial, raw){
+    var e164=buildPhone(dial, raw);
+    if(!/^\+\d{8,15}$/.test(e164)) return false;
+    var digits=e164.slice(1);
+    var dd=String(dial||"+381").replace(/\D/g,"");
+    var nat=digits.indexOf(dd)===0?digits.slice(dd.length):digits;
+    var range=NATLEN[selCountry()]||[7,13];
+    return nat.length>=range[0] && nat.length<=range[1];
+  }
+
+  function showError(m){ errBox.textContent=m; errBox.style.display="block"; }
+  function clearError(){ errBox.textContent=""; errBox.style.display="none"; }
+  function reset(f){ if(f) f.style.borderColor="transparent"; }
+  function resetRow(){ phoneRow.style.borderColor=""; }
+  function splitName(full){ full=(full||"").trim().replace(/\s+/g," "); if(!full) return {first:"",last:""}; var p=full.split(" "); return p.length===1?{first:p[0],last:""}:{first:p[0],last:p.slice(1).join(" ")}; }
+
+  var submitted=false;
+  submitBtn.addEventListener("click", function(){
+    if(submitted) return;
+    clearError(); reset(ime); reset(email); resetRow();
+    var ok=true;
+    if(!ime.value.trim()){ ime.style.borderColor="#E5484D"; ok=false; }
+    if(!vEmail(email.value)){ email.style.borderColor="#E5484D"; ok=false; }
+    if(!vPhone(country.value, tel.value)){ phoneRow.style.borderColor="#E5484D"; ok=false; }
+    if(!ok){ showError("Proveri unos \u2014 ime, ispravan email i validan broj telefona su obavezni."); return; }
+
+    submitted=true;
+    var fullName=ime.value.trim().replace(/\s+/g," ");
+    var sp=splitName(fullName);
+    var payload={ name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
+                  email:email.value.trim().toLowerCase(), phone:buildPhone(country.value, tel.value) };
+
+    /* posalji na Make (sendBeacon primarno da prezivi redirect), pa redirect na thank-you */
+    var form=new URLSearchParams();
+    Object.keys(payload).forEach(function(k){ form.set(k, payload[k]); });
+    var queued=false;
+    try { queued=navigator.sendBeacon(WAITLIST_WEBHOOK, form); } catch(e){}
+    if(!queued){ try { fetch(WAITLIST_WEBHOOK,{method:"POST",mode:"no-cors",keepalive:true,body:form}); } catch(e2){} }
+
+    window.location.href = THANKYOU_URL;
+  });
+})();
+</script>
