@@ -16,12 +16,13 @@ body{ background:var(--bg); font-family:var(--font-sans); color:var(--white); }
 
 .wl-page{ min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:clamp(48px,9vw,96px) 20px; text-align:center; }
 .wl-inner{ width:100%; max-width:1000px; display:flex; flex-direction:column; align-items:center; }
+#wl-form{ width:100%; display:flex; flex-direction:column; align-items:center; }
 
 .wl-title{ margin:0; max-width:900px; font-weight:500; font-size:clamp(38px,8vw,96px); line-height:1.05; letter-spacing:-0.03em; color:var(--white); text-wrap:balance; }
 .wl-title .accent{ font-family:var(--font-serif); font-style:italic; font-weight:500; color:var(--fluo); }
 .wl-sub{ margin:clamp(20px,3vw,28px) 0 0; max-width:640px; font-size:clamp(16px,1.8vw,18px); line-height:1.55; color:var(--muted); }
 
-.wl-form{ width:100%; max-width:520px; margin:clamp(28px,4vw,40px) 0 0; display:flex; flex-direction:column; gap:12px; text-align:left; }
+.wl-form{ width:100%; max-width:520px; margin:clamp(28px,4vw,40px) auto 0; display:flex; flex-direction:column; gap:12px; }
 .wl-input{
   width:100%; background:var(--card); border:1px solid transparent; border-radius:4px;
   color:var(--white); font-family:inherit; font-size:16px; padding:18px 22px; outline:none;
@@ -85,8 +86,8 @@ body{ background:var(--bg); font-family:var(--font-sans); color:var(--white); }
 
     <div id="wl-success" class="wl-success">
       <div class="wl-check">&#10003;</div>
-      <h2>Prijava primljena</h2>
-      <p>Na listi si. Javljamo ti se na email &#269;im otvorimo mesta.</p>
+      <h2>Hvala na prijavi</h2>
+      <p>Kontaktira&#263;emo te prvom prilikom nakon otvaranja novih mesta.</p>
     </div>
   </div>
 </div>
