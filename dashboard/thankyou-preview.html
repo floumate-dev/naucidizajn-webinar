@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thank-you Embed Preview (dark)</title>
+<style>
+  @font-face {
+    font-family: 'Raptor';
+    src: url('https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/65bd4838ea5e3885f0b9cad3_RaptorText-Regular.ttf') format('truetype');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Raptor';
+    src: url('https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/65bd48495f1bb18bfc54cdee_RaptorText-Medium.ttf') format('truetype');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Raptor';
+    src: url('https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/65bd485bae2da4cbc7c48d2d_RaptorText-SemiBold.ttf') format('truetype');
+    font-weight: 600; font-style: normal; font-display: swap;
+  }
+  html, body { margin: 0; padding: 0; background: #232421; min-height: 100vh; }
+  .preview-wrap { max-width: 900px; margin: 0 auto; padding: 60px 24px 80px; }
+  .preview-note {
+    font-family: 'Raptor', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #797d73;
+    margin-bottom: 32px;
+  }
+</style>
+</head>
+<body>
+<div class="preview-wrap">
+  <div class="preview-note">Thank-you page · embed preview (dark · bg-olive-400)</div>
+
+<style>
+  .nd-ref-embed { font-family: 'Raptor', Arial, sans-serif; font-weight: 500; max-width: 720px; margin: 0 auto; }
+  .nd-ref-embed * { box-sizing: border-box; }
+  .nd-ref-card { background: #313330; border: 1px solid #3d403c; border-radius: 0.75rem; padding: 2rem; }
+  .nd-ref-label { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #797d73; margin-bottom: 14px; }
+  .nd-ref-row { display: flex; gap: 8px; align-items: stretch; }
+  .nd-ref-input {
+    flex: 1; background: #232421; border: 1px solid #3d403c; color: #f2efe6;
+    font-family: 'Raptor', Menlo, monospace; font-weight: 500; font-size: 14px;
+    padding: 14px 16px; border-radius: 0.25rem; outline: none; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .nd-ref-input:focus { border-color: #797d73; }
+  .nd-ref-btn {
+    background: #dbff00; color: #232421; border: 1px solid transparent;
+    padding: 14px 26px; border-radius: 0.25rem;
+    font-family: 'Raptor', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1em; cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s; white-space: nowrap;
+  }
+  .nd-ref-btn:hover { background: #afcc00; }
+  .nd-ref-btn:active { transform: scale(0.97); }
+  .nd-ref-btn.nd-ref-copied { background: #5b7a5f; color: #ffffff; }
+  .nd-ref-footnote { color: #a8a79b; font-size: 13px; line-height: 1.55; margin-top: 12px; }
+  .nd-ref-footnote a { color: #dbff00; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .nd-ref-status { color: #a8a79b; font-size: 14px; line-height: 1.55; text-align: center; padding: 8px 0; }
+  .nd-ref-toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #f2efe6; color: #232421;
+    padding: 13px 22px; border-radius: 0.25rem;
+    font-family: 'Raptor', sans-serif; font-size: 14px; font-weight: 600;
+    letter-spacing: -0.01em; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); z-index: 9999;
+  }
+  .nd-ref-toast.nd-ref-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (max-width: 480px) { .nd-ref-btn { padding: 14px 18px; } }
+</style>
+
+<div class="nd-ref-embed" id="nd-ref-embed"></div>
+<div class="nd-ref-toast" id="nd-ref-toast">Link kopiran ✓</div>
+
+<script>
+(function () {
+  var CONFIG = {
+    apiUrl: 'https://nauci-dizajnu-referral.vercel.app/api/signup',
+    tagId: '18986077',
+    webinarUrl: 'https://naucidizajn.com/webinar-uiux-april-2026',
+    dashboardBaseUrl: 'https://nauci-dizajnu-referral.vercel.app',
+  };
+  var root = document.getElementById('nd-ref-embed');
+  setTimeout(function () {
+    renderCard({
+      shareUrl: CONFIG.webinarUrl + '?r=X7K2M9',
+      dashboardUrl: CONFIG.dashboardBaseUrl + '/?t=demo-token',
+    });
+  }, 100);
+
+  function renderCard(data) {
+    root.innerHTML =
+      '<div class="nd-ref-card">' +
+        '<div class="nd-ref-label">Tvoj referral link</div>' +
+        '<div class="nd-ref-row">' +
+          '<input class="nd-ref-input" id="nd-ref-input" value="' + esc(data.shareUrl) + '" readonly />' +
+          '<button class="nd-ref-btn" id="nd-ref-btn" type="button">Kopiraj</button>' +
+        '</div>' +
+        '<div class="nd-ref-footnote">Prati broj prijavljenih preko svog linka na <a href="' + esc(data.dashboardUrl) + '" target="_blank" rel="noopener">svojoj platformi</a>.</div>' +
+      '</div>';
+    document.getElementById('nd-ref-btn').addEventListener('click', onCopy);
+    document.getElementById('nd-ref-input').addEventListener('click', function (e) { e.target.select(); });
+  }
+  function onCopy() {
+    var btn = document.getElementById('nd-ref-btn');
+    var input = document.getElementById('nd-ref-input');
+    var done = function () {
+      btn.textContent = 'Kopirano ✓'; btn.classList.add('nd-ref-copied');
+      showToast();
+      setTimeout(function () { btn.textContent = 'Kopiraj'; btn.classList.remove('nd-ref-copied'); }, 2000);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(input.value).then(done, fallback);
+    } else { fallback(); }
+    function fallback() { input.select(); try { document.execCommand('copy'); } catch (e) {} done(); }
+  }
+  function showToast() {
+    var t = document.getElementById('nd-ref-toast');
+    t.classList.add('nd-ref-show');
+    setTimeout(function () { t.classList.remove('nd-ref-show'); }, 1800);
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+})();
+</script>
+</div>
+</body>
+</html>

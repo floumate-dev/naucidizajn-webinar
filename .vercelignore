@@ -1,0 +1,6 @@
+.env*
+.claude/
+supabase/
+webflow/
+README.md
+dashboard/thankyou-preview.html

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Moj referral · Nauči Dizajn</title>
+<title>Moj referral · Nauči Dizajn - Webinar jul 2026</title>
 <style>
   @font-face {
     font-family: 'Raptor';
@@ -423,29 +423,7 @@
 <script>
   const SUPABASE_URL = 'https://bfnutgejcpqxghyslxur.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbnV0Z2VqY3BxeGdoeXNseHVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NDkxNjQsImV4cCI6MjA5MjQyNTE2NH0.Vl1bYS1FsPp7RZR2ne6LJgbnlpL9-YiWs7yBLlIOYhA';
-  const WEBINAR_LANDING_URL = 'https://naucidizajn.com/giveaway-maj-2026';
-
-  // Vokativ (srpski) — inline, isto kao na landing-u. Mora pre init-a (render ga zove).
-  const VOK_DICT = {
-    'petar':'Petre','aleksandar':'Aleksandre','vuk':'Vuk','novak':'Novak','tarik':'Tarik','faruk':'Faruk',
-    'daniel':'Daniel','gabriel':'Gabriel','mihael':'Mihael','rafael':'Rafael','samuel':'Samuel','manuel':'Manuel','noel':'Noel',
-    'kevin':'Kevin','brajan':'Brajan','dilan':'Dilan','denis':'Denis',
-    'ines':'Ines','nives':'Nives','karmen':'Karmen','doris':'Doris','iris':'Iris','ingrid':'Ingrid',
-    'dolores':'Dolores','nikol':'Nikol','merjem':'Merjem'
-  };
-  function vokativ(raw){
-    if(!raw) return '';
-    let nm = String(raw).trim().split(/\s+/)[0];
-    if(!nm) return '';
-    nm = nm.charAt(0).toLocaleUpperCase('sr') + nm.slice(1).toLocaleLowerCase('sr');
-    const key = nm.toLocaleLowerCase('sr');
-    if(VOK_DICT[key]) return VOK_DICT[key];
-    const last = nm.slice(-1).toLowerCase();
-    if('aeiou'.indexOf(last)!==-1) return nm;   // samoglasnik -> nominativ
-    if('kgh'.indexOf(last)!==-1) return nm;     // -k/-g/-h
-    if(last==='j') return nm;                   // -j -> nominativ
-    return nm + 'e';                            // ostali suglasnici -> Stefan->Stefane
-  }
+  const WEBINAR_LANDING_URL = 'https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-webinar-jul-2026';
 
   const params = new URLSearchParams(location.search);
   const token = params.get('t');
@@ -523,15 +501,15 @@
     const firstName = data.first_name || '';
     const lastName = data.last_name || '';
     const refCode = data.ref_code;
-    const shareUrl = `${WEBINAR_LANDING_URL}?r=${refCode}`;
+    const shareUrl = `${WEBINAR_LANDING_URL}?r=${refCode}&source=referral&specificsource=referral_dashboard`;
     const referrals = Array.isArray(data.referrals) ? data.referrals : [];
     const myRank = data.my_rank;
     const totalActive = Number(data.total_with_referrals || 0);
 
-    const greeting = firstName ? `Pozdrav, ${escapeHtml(vokativ(firstName))}!` : 'Pozdrav!';
+    const greeting = firstName ? `Ćao, ${escapeHtml(vokativ(firstName))}!` : 'Ćao!';
     const subtitle = count === 0
-      ? 'Pozovi prijatelje. Ako neko ko se prijavi preko tvog linka bude izvučen, pobeđuješ i ti.'
-      : `Već imaš ${count} ${plural(count)} preko svog linka. Što više ljudi, veće su tvoje šanse u izvlačenju.`;
+      ? ''
+      : `Već si pozvao/la ${count} ${pluralOsoba(count)}.`;
 
     const rankBlock = myRank
       ? `<div class="progress-rank">
@@ -544,7 +522,7 @@
     app.innerHTML = `
       <div class="hero">
         <h1>${greeting}</h1>
-        <p>${subtitle}</p>
+        ${subtitle ? `<p>${subtitle}</p>` : ''}
       </div>
 
       <div class="card">
@@ -569,7 +547,7 @@
       <div class="card">
         <div class="card-label">Ljudi koje si doveo (${count})</div>
         ${referrals.length === 0
-          ? `<div class="empty">Još niko. Podeli link iznad — potreban ti je samo klik na "Kopiraj".</div>`
+          ? `<div class="empty">Još niko. Podeli link iznad - potreban ti je samo klik na "Kopiraj".</div>`
           : `<ul class="ref-list">${referrals.map(renderRefItem).join('')}</ul>`}
       </div>
 
@@ -584,11 +562,10 @@
     if (!board || board.length === 0) return '';
 
     const rows = board.map((r) => {
-      const isMe = r.is_me === true;
       const top3 = r.rank <= 3;
-      const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || '—';
+      const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || '-';
       return `
-        <li class="lb-item ${isMe ? 'me' : ''} ${top3 ? 'top-3' : ''}">
+        <li class="lb-item ${top3 ? 'top-3' : ''}">
           <div class="lb-rank">${r.rank}</div>
           <div>
             <div class="lb-name">${escapeHtml(name)}</div>
@@ -603,7 +580,7 @@
 
     const showMyPosition = myRank != null && myRank > board.length;
     const foot = showMyPosition
-      ? `<div class="lb-foot">Ti si <span class="highlight">#${myRank}</span> sa ${myCount} ${plural(myCount)}. Vrati se na vrh — nije kasno.</div>`
+      ? `<div class="lb-foot">Ti si <span class="highlight">#${myRank}</span> sa ${myCount} ${plural(myCount)}. Vrati se na vrh - nije kasno.</div>`
       : '';
 
     return `
@@ -616,7 +593,7 @@
   }
 
   function renderRefItem(r) {
-    const full = [r.first_name, r.last_name].filter(Boolean).join(' ') || '—';
+    const full = [r.first_name, r.last_name].filter(Boolean).join(' ') || '-';
     return `
       <li class="ref-item">
         <div class="ref-item-main">
@@ -667,6 +644,14 @@
     return 'prijava';
   }
 
+  function pluralOsoba(n) {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return 'osobu';
+    if ([2,3,4].includes(mod10) && ![12,13,14].includes(mod100)) return 'osobe';
+    return 'osoba';
+  }
+
   function formatTime(iso) {
     if (!iso) return '';
     const d = new Date(iso);
@@ -677,6 +662,33 @@
     const days = Math.floor(diff / 86400);
     if (days < 7) return `pre ${days} ${days === 1 ? 'dan' : 'dana'}`;
     return d.toLocaleDateString('sr-Latn-RS', { day: 'numeric', month: 'short' });
+  }
+
+  // Srpski vokativ imena. Pravila + izuzeci. Pokriva vecinu cestih imena.
+  // Neobicna/retka imena mozes dodati u VOKATIV_IRREGULAR mapu (lowercase kljuc -> vokativ).
+  var VOKATIV_IRREGULAR = {
+    // nepostojano "a" u -ar (a ispada)
+    'petar':'Petre', 'aleksandar':'Aleksandre', 'mitar':'Mitre', 'dimitar':'Dimitre',
+    // ostali cesti izuzeci po potrebi:
+    'pavle':'Pavle', 'djordje':'Đorđe', 'đorđe':'Đorđe'
+  };
+  function vokativ(name) {
+    if (!name) return name;
+    var n = String(name).trim();
+    if (!n) return n;
+    var key = n.toLowerCase();
+    if (VOKATIV_IRREGULAR[key]) return VOKATIV_IRREGULAR[key];
+
+    var last = key.charAt(key.length - 1);
+    // samoglasnik na kraju -> nepromenjeno (Marko, Danilo, Nikola, Luka, Ilija, Ana, Jovana, Đorđe, Pavle)
+    if ('aeiou'.indexOf(last) !== -1) return n;
+    // palatalizacija zadnjeg suglasnika: k->č, g->ž, h->š, c->č (Vuk->Vuče, Novak->Novače, Predrag->Predraže)
+    if (last === 'k') return n.slice(0, -1) + 'če';
+    if (last === 'g') return n.slice(0, -1) + 'že';
+    if (last === 'h') return n.slice(0, -1) + 'še';
+    if (last === 'c') return n.slice(0, -1) + 'če';
+    // ostali suglasnici -> +e (Ivan->Ivane, Dušan->Dušane, Miloš->Miloše, Filip->Filipe, Lazar->Lazare, Stefan->Stefane)
+    return n + 'e';
   }
 
   function escapeHtml(s) {

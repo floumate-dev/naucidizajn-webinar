@@ -6,9 +6,9 @@
 // ENV VARS REQUIRED:
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY
-//   CONVERTKIT_API_SECRET
-//   CONVERTKIT_WINNER_TAG_ID  (optional — applied when a referrer reaches REWARD_THRESHOLD)
-//   REWARD_THRESHOLD          (optional — default 5)
+//   CONVERTKIT_API_SECRET     (only for direct-Kit campaigns; webinar handles Kit via Make)
+//   REWARD_WEBHOOK_URL        (Make webhook fired ONCE when a referrer reaches REWARD_THRESHOLD)
+//   REWARD_THRESHOLD          (optional — default 10)
 //   WEBINAR_LANDING_URL       (server-authoritative webinar URL used in shareUrl)
 //   DASHBOARD_BASE_URL        (e.g. https://app.naucidizajn.com)
 //
@@ -102,15 +102,17 @@ export default async function handler(req, res) {
         isNew: signup.is_new,
       });
     }
+    // (Kit subscriber synced; welcome automation fires on tag.)
+  }
 
-    // 3. If this signup pushes the referrer at or above REWARD_THRESHOLD, tag them.
-    //    Best-effort — don't fail the response if tagging fails.
-    if (signup.is_new && signup.referred_by) {
-      try {
-        await maybeTagWinner(signup.referred_by);
-      } catch (err) {
-        console.error('winner tag failed', err);
-      }
+  // 3. Reward: if this NEW referral pushed the referrer to REWARD_THRESHOLD (10),
+  //    fire the Make reward webhook exactly once (guarded by reward_notified in Supabase).
+  //    Runs in BOTH modes (webinar/Make and direct-Kit). Best-effort — never fail the response.
+  if (signup.is_new && signup.referred_by) {
+    try {
+      await maybeFireRewardWebhook(signup.referred_by);
+    } catch (err) {
+      console.error('reward webhook failed', err);
     }
   }
 
@@ -212,58 +214,57 @@ async function syncConvertKit({ tagId, email, firstName, lastName, refCode, dash
   return { subscriberId };
 }
 
-// If a referrer's count just reached/exceeded the reward threshold, apply the winner
-// tag in Kit. Idempotent — Kit accepts the same tag being applied multiple times.
-async function maybeTagWinner(referrerRefCode) {
-  const winnerTagId = process.env.CONVERTKIT_WINNER_TAG_ID;
-  const apiKey = process.env.CONVERTKIT_API_SECRET;
-  const threshold = Number(process.env.REWARD_THRESHOLD || 5);
-  if (!winnerTagId || !apiKey) return;
+// If this NEW referral pushed the referrer to/over the threshold, fire the Make reward
+// webhook — exactly once. The conditional PATCH flips reward_notified false->true only when
+// referrals_brought >= threshold AND not yet notified, and returns the row ONLY for the
+// request that actually flips it (race-safe: the WHERE clause + single UPDATE guarantee one
+// winner). referrals_brought is maintained by a Supabase AFTER INSERT trigger, so it is
+// already current by the time this runs. Make then applies the Kit tag + anything else.
+async function maybeFireRewardWebhook(referrerRefCode) {
+  const webhookUrl = process.env.REWARD_WEBHOOK_URL;
+  const threshold = Number(process.env.REWARD_THRESHOLD || 10);
+  if (!webhookUrl) return;
 
-  // Fetch referrer email + count of their referrals
-  const supaHeaders = {
-    apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-    Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-  };
   const refCodeEnc = encodeURIComponent(referrerRefCode);
+  const patchUrl = `${process.env.SUPABASE_URL}/rest/v1/signups`
+    + `?ref_code=eq.${refCodeEnc}`
+    + `&referrals_brought=gte.${threshold}`
+    + `&reward_notified=eq.false`
+    + `&select=email,first_name,last_name,ref_code,referrals_brought`;
 
-  const [emailRes, countRes] = await Promise.all([
-    fetch(`${process.env.SUPABASE_URL}/rest/v1/signups?ref_code=eq.${refCodeEnc}&select=email&limit=1`, { headers: supaHeaders }),
-    fetch(`${process.env.SUPABASE_URL}/rest/v1/signups?referred_by=eq.${refCodeEnc}&select=ref_code`, {
-      headers: { ...supaHeaders, Prefer: 'count=exact' },
-    }),
-  ]);
-
-  if (!emailRes.ok || !countRes.ok) {
-    throw new Error(`maybeTagWinner: supabase ${emailRes.status}/${countRes.status}`);
-  }
-
-  const referrerRows = await emailRes.json();
-  const referrerEmail = referrerRows?.[0]?.email;
-  if (!referrerEmail) return;
-
-  const range = countRes.headers.get('content-range') || '*/0';
-  const total = parseInt(range.split('/')[1] || '0', 10);
-  if (total < threshold) return;
-
-  // Apply Kit winner tag: upsert subscriber → apply tag
-  const kitHeaders = { 'Content-Type': 'application/json', 'X-Kit-Api-Key': apiKey };
-  const subRes = await fetch('https://api.kit.com/v4/subscribers', {
-    method: 'POST',
-    headers: kitHeaders,
-    body: JSON.stringify({ email_address: referrerEmail, state: 'active' }),
+  const patchRes = await fetch(patchUrl, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify({ reward_notified: true }),
   });
-  if (!subRes.ok) throw new Error(`kit subscriber ${subRes.status}: ${await subRes.text()}`);
-  const subId = (await subRes.json())?.subscriber?.id;
-  if (!subId) throw new Error('kit subscriber: no id');
+  if (!patchRes.ok) throw new Error(`reward patch ${patchRes.status}: ${await patchRes.text()}`);
 
-  const tagRes = await fetch(
-    `https://api.kit.com/v4/tags/${encodeURIComponent(winnerTagId)}/subscribers/${encodeURIComponent(subId)}`,
-    { method: 'POST', headers: kitHeaders }
-  );
-  if (!tagRes.ok) throw new Error(`kit apply winner tag ${tagRes.status}: ${await tagRes.text()}`);
+  const rows = await patchRes.json();
+  const row = Array.isArray(rows) ? rows[0] : null;
+  if (!row) return; // not at threshold yet, or already notified — nothing to do
 
-  console.log(`[winner] tagged ${referrerEmail} (count=${total})`);
+  const hookRes = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event: 'referral_reward',
+      threshold,
+      email: row.email,
+      first_name: row.first_name || '',
+      last_name: row.last_name || '',
+      ref_code: row.ref_code,
+      referrals_brought: row.referrals_brought,
+      tag: 'Webinar 09.07.2026. | 10 Referrals',
+    }),
+  });
+  if (!hookRes.ok) throw new Error(`reward webhook ${hookRes.status}: ${await hookRes.text()}`);
+
+  console.log(`[reward] fired Make webhook for ${row.email} (referrals_brought=${row.referrals_brought})`);
 }
 
 function cleanString(v) {
