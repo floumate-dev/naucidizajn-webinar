@@ -328,7 +328,7 @@ body.modal-open{ overflow:hidden; }
     <div class="cta-wrap"><a class="cta full" href="#prijava">Prijavi se besplatno <span aria-hidden="true">&#8594;</span></a></div>
     <div class="date-row">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--nd-fluo)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
-      Webinar se odr&#382;ava u &#269;etvrtak, 9. jul u 19h
+      Webinar se odr&#382;ava u &#269;etvrtak, 30. jul u 19h
     </div>
     <div class="countdown" id="countdown">
       <div class="cd-cell"><div class="cd-num" data-days>00</div><div class="cd-label">Dana</div></div>
@@ -411,6 +411,8 @@ body.modal-open{ overflow:hidden; }
    ========================================================================= */
 (function(){
   /* ---------- KONFIG (proveri pre publish-a) ---------- */
+  var WEBINAR_ID   = "30.07";   // ide u Make payload kao "webinar" -> filter propusta samo tekuci webinar.
+                                // PROMENI NA SVAKOM NOVOM WEBINARU (i uskladi filter u Make-u).
   var MAKE_WEBHOOK = "https://hook.eu2.make.com/n0sdfhr9jf1drjk85bjfnmkb2fh0eeqg";
   var THANKYOU_URL = "/ai-dizajnira-ti-zaradjujes-thank-you"; // Webflow thank-you slug (www.naucidizajn.com)
   var AEVENT = {
@@ -507,7 +509,7 @@ body.modal-open{ overflow:hidden; }
     + '<div id="ndm-form">'
     + '<div style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#DBFF00;">Rezervi\u0161i mesto</div>'
     + '<h3 style="margin:12px 0 0;font-weight:600;font-size:23px;letter-spacing:-0.01em;color:#fff;">Prijavi se na besplatan webinar</h3>'
-    + '<p style="margin:8px 0 0;font-size:14px;line-height:1.5;color:#D3D3D3;">\u010cetvrtak, 9. jul u 19h, u\u017eivo preko Zoom-a. \u0160aljem ti link i podsetnik pre po\u010detka.</p>'
+    + '<p style="margin:8px 0 0;font-size:14px;line-height:1.5;color:#D3D3D3;">\u010cetvrtak, 30. jul u 19h, u\u017eivo preko Zoom-a. \u0160aljem ti link i podsetnik pre po\u010detka.</p>'
     + field("ndm-ime","Ime i prezime","Petar Petrovi\u0107","text","name","")
     + field("ndm-email","Email","email@primer.com","email","email","")
     + phoneRowHtml
@@ -671,7 +673,7 @@ body.modal-open{ overflow:hidden; }
 
     /* 1) Make webhook (fire-and-forget JSON keepalive): Kit + tracking. Vokativ ra\u010dunamo ovde. */
     try {
-      var mk = { name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
+      var mk = { webinar:WEBINAR_ID, name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
                  email:emailVal, phone:phoneE164, ref:ref };
       for (var mkk in trk) { if (Object.prototype.hasOwnProperty.call(trk, mkk)) mk[mkk] = String(trk[mkk]); }
       fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(mk), keepalive:true }).catch(function(){});
@@ -735,7 +737,7 @@ body.modal-open{ overflow:hidden; }
 
 /* ===== countdown ===== */
 (function(){
-  var target = new Date("2026-07-09T19:00:00+02:00").getTime(); // Beograd vreme (UTC+2 u julu)
+  var target = new Date("2026-07-30T19:00:00+02:00").getTime(); // Beograd vreme (UTC+2 u julu)
   var el = {
     days: document.querySelector("[data-days]"),
     hours: document.querySelector("[data-hours]"),
