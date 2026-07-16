@@ -105,18 +105,7 @@ html{ scroll-behavior:smooth; }
   margin-top:16px; display:flex; align-items:center; gap:9px;
   color:var(--nd-bela); font-size:15px; font-weight:600;
 }
-.countdown{ margin-top:48px; display:flex; gap:8px; }
-.cd-cell{
-  background:rgba(35,36,33,0.6); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  border:1px solid var(--nd-border-on-dark); border-radius:12px;
-  padding:10px 14px; min-width:62px; text-align:center;
-}
-.cd-cell.accent{ background:var(--nd-fluo); border-color:transparent; }
-.cd-num{ font-size:24px; font-weight:500; line-height:1; color:var(--nd-bela); font-variant-numeric:tabular-nums; }
-.cd-cell.accent .cd-num{ color:var(--nd-maslina-400); }
-.cd-label{ margin-top:5px; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--nd-body-on-dark); }
-.cd-cell.accent .cd-label{ color:var(--nd-maslina-300); }
-.bullets{ margin-top:24px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px 20px; }
+.bullets{ margin-top:32px; display:flex; flex-wrap:wrap; justify-content:center; gap:12px 20px; }
 .bullet{ display:flex; align-items:center; gap:8px; }
 .bullet .tick{
   flex:none; width:20px; height:20px; border-radius:50%;
@@ -310,7 +299,6 @@ body.modal-open{ overflow:hidden; }
 @media (max-width:640px){
   .host-banner{ aspect-ratio:1440/820; }
   .hero-content{ margin-top:-14vw; }
-  .countdown{ margin-top:36px; }
 }
 </style>
 
@@ -329,12 +317,6 @@ body.modal-open{ overflow:hidden; }
     <div class="date-row">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--nd-fluo)" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg>
       Webinar se odr&#382;ava u &#269;etvrtak, 30. jul u 19h
-    </div>
-    <div class="countdown" id="countdown">
-      <div class="cd-cell"><div class="cd-num" data-days>00</div><div class="cd-label">Dana</div></div>
-      <div class="cd-cell"><div class="cd-num" data-hours>00</div><div class="cd-label">Sati</div></div>
-      <div class="cd-cell"><div class="cd-num" data-mins>00</div><div class="cd-label">Min</div></div>
-      <div class="cd-cell accent"><div class="cd-num" data-secs>00</div><div class="cd-label">Sek</div></div>
     </div>
     <div class="bullets">
       <div class="bullet"><span class="tick">&#10003;</span><span>Nije potrebno predznanje</span></div>
@@ -735,30 +717,4 @@ body.modal-open{ overflow:hidden; }
   });
 })();
 
-/* ===== countdown ===== */
-(function(){
-  var target = new Date("2026-07-30T19:00:00+02:00").getTime(); // Beograd vreme (UTC+2 u julu)
-  var el = {
-    days: document.querySelector("[data-days]"),
-    hours: document.querySelector("[data-hours]"),
-    mins: document.querySelector("[data-mins]"),
-    secs: document.querySelector("[data-secs]")
-  };
-  function pad(n){ return String(n).padStart(2,"0"); }
-  function tick(){
-    var now = Date.now();
-    if (target <= now) { var cd=document.getElementById("countdown"); if(cd) cd.style.display="none"; return; }
-    var diff = target - now;
-    var S=1000, M=60*S, H=60*M, D=24*H;
-    var days=Math.floor(diff/D); diff-=days*D;
-    var hours=Math.floor(diff/H); diff-=hours*H;
-    var mins=Math.floor(diff/M); diff-=mins*M;
-    var secs=Math.floor(diff/S);
-    el.days.textContent=pad(days);
-    el.hours.textContent=pad(hours);
-    el.mins.textContent=pad(mins);
-    el.secs.textContent=pad(secs);
-  }
-  tick(); setInterval(tick, 1000);
-})();
 </script>
