@@ -20,6 +20,11 @@ Tamo je ceo sistem: arhitektura, sve integracije sa tačnim vrednostima, i "gotc
 | [`dashboard/`](./dashboard) | Standalone referral dashboard (Vercel). |
 | [`docs/`](./docs) | Deep-dive: arhitektura, AEvent, Make scenario, go-live checklist. |
 
+## ⚠️ Pre deploya
+
+**Obavezno [`docs/DEPLOY.md`](./docs/DEPLOY.md).** Repo ide u DVA Vercel projekta, a alias API-ja
+ne prati produkciju — `vercel deploy --prod` ume da prijavi uspeh a da uzivo ne promeni nista.
+
 ## Deploy (ukratko)
 
 1. Supabase: `schema.sql` + `mig-step-*.sql` u SQL Editor.

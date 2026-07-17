@@ -12,13 +12,14 @@
 //   WEBINAR_LANDING_URL       (server-authoritative webinar URL used in shareUrl)
 //   DASHBOARD_BASE_URL        (e.g. https://app.naucidizajn.com)
 //
-// CORS origins allowed: naucidizajn.com and www.naucidizajn.com.
+// CORS origins allowed: naucidizajn.com, www.naucidizajn.com + Webflow staging.
 
 export const config = { runtime: 'nodejs' };
 
 const ALLOWED_ORIGINS = [
   'https://naucidizajn.com',
   'https://www.naucidizajn.com',
+  'https://nauci-dizajn.webflow.io',   // Webflow staging — da se thank-you moze testirati pre publish-a
 ];
 
 export default async function handler(req, res) {
