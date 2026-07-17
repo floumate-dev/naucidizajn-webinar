@@ -1,7 +1,14 @@
 # AEvent integracija
 
-AEvent (tenant `42253777`) hostuje webinar, prati attendance/watch-time i šalje webinar
-link + podsetnike. Ovaj dokument je reverse-engineering AEvent API-ja (nema javne docs koje smo koristili).
+AEvent (tenant `42253777`) hostuje webinar, pravi Zoom sobu, upisuje per-registrant join link
+u Kit custom field i prati attendance/watch-time. Ovaj dokument je reverse-engineering AEvent
+API-ja (nema javne docs koje smo koristili).
+
+> ⚠️ **ISPRAVKA (2026-07-17):** raniji tekst je tvrdio da AEvent „šalje podsetnike". **NETAČNO.**
+> Svi podsetnici i promo mejlovi za 09.07 webinar su išli kao **Kit (ConvertKit) broadcast-ovi**,
+> ručno (dokaz: Kit broadcast lista — „Webinar kreće za 1h", „Live smo", „Snimak sinoćnog"...).
+> AEvent NEMA sekvencu za to; jedino što (možda) sam pošalje je confirmation poruka sa join linkom
+> odmah po prijavi. **Za nov webinar: podsetnike/promo praviš u Kit-u, ne u AEvent-u.**
 
 ## TL;DR
 
