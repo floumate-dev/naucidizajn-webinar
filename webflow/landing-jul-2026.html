@@ -236,6 +236,31 @@ html{ scroll-behavior:smooth; }
 
 .site-foot{ background:#070A01; color:var(--nd-maslina-100); text-align:center; padding:28px 24px; font-size:13px; }
 
+/* ============ SECTION: TESTIMONIJALI ============ */
+.tst{ background:var(--nd-maslina-400); padding:clamp(64px,9vw,120px) 24px; }
+.tst-inner{ width:100%; max-width:1120px; margin:0 auto; }
+.tst-eyebrow{ font-size:14px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--nd-fluo); }
+.tst-head{
+  margin:14px 0 0; max-width:820px; font-weight:500; font-size:clamp(32px,4.4vw,48px);
+  line-height:1.08; letter-spacing:-0.03em; color:var(--nd-bela); text-wrap:balance;
+}
+.tst-head em{ font-style:normal; color:#000; background:var(--nd-fluo); padding:0 .12em; border-radius:4px; }
+.tst-sub{ margin:18px 0 0; max-width:620px; font-size:18px; line-height:1.6; color:var(--nd-body-on-dark); }
+.tst-grid{ margin-top:48px; columns:2; column-gap:20px; }
+.tst-card{
+  margin:0 0 20px; break-inside:avoid; border-radius:var(--nd-radius-lg); overflow:hidden;
+  border:1px solid var(--nd-border-on-dark); background:#fff; box-shadow:0 10px 34px rgba(0,0,0,0.28);
+}
+.tst-card img{ display:block; width:100%; height:auto; }
+.tst-ph{
+  display:none; align-items:center; justify-content:center; flex-direction:column; gap:6px;
+  min-height:300px; padding:24px; text-align:center; background:#F2EFE6;
+  color:var(--nd-maslina-100); font-size:14px; font-weight:600;
+}
+.tst-ph span{ font-weight:400; font-size:12px; color:#9a9b95; }
+.tst-cta{ margin-top:44px; display:flex; justify-content:center; }
+@media (max-width:720px){ .tst-grid{ columns:1; } }
+
 /* ============ POPUP PRIJAVA ============ */
 body.modal-open{ overflow:hidden; }
 .modal-overlay{
@@ -387,6 +412,45 @@ body.modal-open{ overflow:hidden; }
         <div class="about-cta"><a class="cta" href="#prijava">Prijavi se besplatno <span aria-hidden="true">&#8594;</span></a></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIJALI ============ -->
+<!--
+  SCREENSHOTOVI: uploaduj svaka 4 u Webflow (Assets panel) pa zameni PASTE_SCREENSHOT_N_URL
+  dobijenim linkom (izgleda kao https://cdn.prod.website-files.com/...). Dok su placeholderi,
+  onerror prikaze sivu plocu sa imenom - nista se ne lomi.
+-->
+<section class="tst">
+  <div class="tst-inner">
+    <div class="tst-eyebrow">Iz na&#353;e zajednice</div>
+    <h2 class="tst-head">Polaznici koji su ve&#263; na&#353;li <em>prve klijente</em></h2>
+    <p class="tst-sub">Nije teorija. Evo &#353;ta ljudi iz Nau&#269;i Dizajn zajednice postignu sa svojim prvim sajtovima - &#269;esto ve&#263; posle par nedelja.</p>
+
+    <div class="tst-grid">
+      <figure class="tst-card">
+        <img src="PASTE_SCREENSHOT_1_URL" alt="Nemanja Jovanovi&#263; - prvi klijent, sajt za 550&#8364;"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tst-ph">Screenshot 1 &#183; Nemanja Jovanovi&#263;<span>Uploaduj u Webflow Assets pa zameni URL</span></div>
+      </figure>
+      <figure class="tst-card">
+        <img src="PASTE_SCREENSHOT_2_URL" alt="Gordana Jefti&#263; - sajt joj puni kalendar konsultacija"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tst-ph">Screenshot 2 &#183; Gordana Jefti&#263;<span>Uploaduj u Webflow Assets pa zameni URL</span></div>
+      </figure>
+      <figure class="tst-card">
+        <img src="PASTE_SCREENSHOT_3_URL" alt="Martin Sekicki - prvi klijent, sajt za FastFood (300&#8364;)"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tst-ph">Screenshot 3 &#183; Martin Sekicki<span>Uploaduj u Webflow Assets pa zameni URL</span></div>
+      </figure>
+      <figure class="tst-card">
+        <img src="PASTE_SCREENSHOT_4_URL" alt="Stefana Milenkovi&#263; - dogovorila prvi projekat sa klijentom"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tst-ph">Screenshot 4 &#183; Stefana Milenkovi&#263;<span>Uploaduj u Webflow Assets pa zameni URL</span></div>
+      </figure>
+    </div>
+
+    <div class="tst-cta"><a class="cta" href="#prijava">Prijavi se besplatno <span aria-hidden="true">&#8594;</span></a></div>
   </div>
 </section>
 
