@@ -489,8 +489,24 @@ body.modal-open{ overflow:hidden; }
     if (Object.keys(trk).length) sessionStorage.setItem("nd_trk", JSON.stringify(trk));
   } catch(e){}
 
+  /* Meta CAPI: fbc = klik-id sa reklame. Hvata se na ULAZU (gde reklama vodi) i cuva
+     u sessionStorage kroz ceo funnel. Format fb.1.<unix_ms>.<fbclid> je Meta standard
+     (isto sto bi pixel upisao u _fbc kolacic). Prazan kad posetilac ne dolazi sa reklame. */
+  try {
+    if (!sessionStorage.getItem("nd_fbc")) {
+      var fbclid = (params.get("fbclid") || "").trim();
+      if (fbclid) sessionStorage.setItem("nd_fbc", "fb.1." + Date.now() + "." + fbclid);
+    }
+  } catch(e){}
+
   function getRef(){ try { return sessionStorage.getItem("nd_ref") || ""; } catch(e){ return ""; } }
   function getTrk(){ try { return JSON.parse(sessionStorage.getItem("nd_trk") || "{}"); } catch(e){ return {}; } }
+  function getFbc(){ try { return sessionStorage.getItem("nd_fbc") || ""; } catch(e){ return ""; } }
+  function getFbp(){ try { var c = ("; " + document.cookie).split("; _fbp="); return c.length === 2 ? c.pop().split(";").shift() : ""; } catch(e){ return ""; } }
+  function newEventId(){
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch(e){}
+    return "nd-" + Date.now() + "-" + Math.random().toString(36).slice(2,10);
+  }
   function splitName(full){
     full = (full || "").trim().replace(/\s+/g," ");
     if (!full) return { first:"", last:"" };
@@ -720,7 +736,15 @@ body.modal-open{ overflow:hidden; }
     /* 1) Make webhook (fire-and-forget JSON keepalive): Kit + tracking. Vokativ ra\u010dunamo ovde. */
     try {
       var mk = { webinar:WEBINAR_ID, name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
-                 email:emailVal, phone:phoneE164, ref:ref };
+                 email:emailVal, phone:phoneE164, ref:ref,
+                 /* Meta CAPI (server-side Lead preko Make HTTP modula). fbc/fbp/UA/URL idu PLAIN,
+                    Make heshuje email/telefon/ime. event_time u UNIX SEKUNDAMA (ne ISO). */
+                 event_id: newEventId(),
+                 event_time: Math.floor(Date.now()/1000),
+                 event_source_url: window.location.href,
+                 client_user_agent: navigator.userAgent,
+                 fbc: getFbc(),
+                 fbp: getFbp() };
       for (var mkk in trk) { if (Object.prototype.hasOwnProperty.call(trk, mkk)) mk[mkk] = String(trk[mkk]); }
       fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(mk), keepalive:true }).catch(function(){});
     } catch(_){}
