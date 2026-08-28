@@ -3,7 +3,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ REKLAMA (Instagram itd.)                                                      │
-│   URL: .../ai-dizajnira-ti-zaradjujes-webinar-jul-2026?source=ig&specificsource=ig_video │
+│   URL: .../ai-dizajnira-ti-zaradjujes-webinar?source=ig&specificsource=ig_video │
 └───────────────┬──────────────────────────────────────────────────────────────┘
                 │
                 ▼

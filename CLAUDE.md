@@ -52,7 +52,7 @@ docs/
 
 | Stvar | Vrednost |
 |---|---|
-| Landing URL | `https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-webinar-jul-2026` |
+| Landing URL | `https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-webinar` |
 | Thank-you URL | `https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-thank-you` |
 | Thank-you slug (u landing JS) | `/ai-dizajnira-ti-zaradjujes-thank-you` |
 | Webinar termin | 9. jul 2026, 19:00 Europe/Belgrade (CEST, 17:00 UTC) |
