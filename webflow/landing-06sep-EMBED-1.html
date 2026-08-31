@@ -177,26 +177,3 @@ Polaznici koji su došli sa webinara i već našli <span style="font-family:var(
 © 2026 · AI dizajnira, ti zarađuješ
 </footer>
 </x-dc>
-<script type="text/x-dc" data-dc-script="" data-props="{&quot;targetIso&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;2026-09-06T19:00:00&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Termin&quot;}}">
-class Component extends DCLogic {
-state = { now: Date.now() };
-componentDidMount() {
-this._t = setInterval(() => this.setState({ now: Date.now() }), 1000);
-}
-componentWillUnmount() {
-clearInterval(this._t);
-}
-renderVals() {
-const iso = this.props.targetIso || '2026-09-06T19:00:00';
-const target = new Date(iso).getTime();
-let diff = Math.max(0, target - this.state.now);
-const S = 1000, M = 60 * S, H = 60 * M, D = 24 * H;
-const days = Math.floor(diff / D); diff -= days * D;
-const hours = Math.floor(diff / H); diff -= hours * H;
-const mins = Math.floor(diff / M); diff -= mins * M;
-const secs = Math.floor(diff / S);
-const pad = (n) => String(n).padStart(2, '0');
-return { days: pad(days), hours: pad(hours), mins: pad(mins), secs: pad(secs) };
-}
-}
-</script>
