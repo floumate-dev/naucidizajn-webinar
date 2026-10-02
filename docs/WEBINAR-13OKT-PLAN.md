@@ -44,8 +44,8 @@ Legenda: `[x]` gotovo · `[ ]` čeka · ⏳ čeka nekog (ko) · (D) radi Danilo 
 - [ ] Claude YT opt-in automation OSTAJE UGAŠENA do posle webinara
 
 ## 6. Supabase referral (C daje SQL, D pušta)
-- [ ] Arhiva `signups` → `signups_arhiva_sep2026`, ODMAH `enable row level security`, pa `delete from signups`
-- [ ] Provera: anon čitanje vraća `[]`, živa tabela prazna
+- [x] Arhiva `signups` → `signups_arhiva_sep2026` (2016 redova, 02.10), RLS + revoke, `delete from signups`
+- [x] Provera: anon na arhivi „permission denied", živa tabela `[]`
 
 ## 7. Meta reklame (D / media buyer)
 - [ ] Reklame vode na isti slug (bez 301 — on briše fbclid/utm)
