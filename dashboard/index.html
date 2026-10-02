@@ -431,7 +431,8 @@
   const isDemoMode = params.get('demo') === '1';
 
   if (isDemoMode) {
-    render(demoData(), demoLeaderboard());
+    // posle cele skripte: render koristi VOKATIV_IRREGULAR, koji je definisan nize (var jos nije dodeljen)
+    setTimeout(function () { render(demoData(), demoLeaderboard()); }, 0);
   } else if (!token) {
     renderError('Link nije ispravan. Proveri mail koji si dobio posle prijave.');
   } else {
