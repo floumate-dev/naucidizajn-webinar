@@ -1,0 +1,160 @@
+<!-- Landing B (A/B test), webinar 13.10.2026 - DIZAJN. Ispod ovog embeda ide landing-13okt-EMBED-2.html (forma, AEvent, Make, odbrojavanje), ISTI kao na landingu A. -->
+<style>iframe[src*="iclosed.io"],[id*="iclosed" i],[class*="iclosed" i],[data-cta-widget]{display:none !important}</style>
+<script>
+(function () {
+function nuke() {
+document.querySelectorAll('iframe[src*="iclosed.io"], [id*="iclosed" i], [class*="iclosed" i], [data-cta-widget]').forEach(function (el) { el.remove(); });
+}
+nuke();
+var obs = new MutationObserver(nuke);
+try { obs.observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+setTimeout(function () { obs.disconnect(); }, 20000);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap">
+<style>
+/* Webflow: font se u projektu zove "Raptor TTF"; body namece font-weight 500 i line-height 1.55 - ovde se vraca kako je u dizajnu. */
+:root{--nd-font-sans:"Raptor TTF","Raptor Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--ndb-display:'Special Gothic Expanded One',"Raptor TTF",sans-serif}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F2EFE6}
+#ndb,#ndb *{box-sizing:border-box}
+#ndb{font-family:var(--nd-font-sans);font-weight:400;line-height:normal;color:#232421}
+#ndb a{text-decoration:none}
+#ndb h1,#ndb h2,#ndb p,#ndb figure{margin:0}
+#ndb section{display:flex;flex-direction:column;align-items:center;text-align:center}
+#ndb .ndb-display{font-family:var(--ndb-display);font-weight:400;text-transform:uppercase;text-wrap:balance}
+#ndb .ndb-btn{width:100%;max-width:620px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:8px;padding:18px 24px;transition:background 180ms ease-out,transform 180ms ease-out}
+#ndb .ndb-btn:active{transform:scale(0.98)}
+#ndb .ndb-btn-main{font-size:clamp(17px,2vw,24px);font-weight:600;letter-spacing:.01em;text-transform:uppercase;line-height:1.15}
+#ndb .ndb-btn-sub{font-size:clamp(14px,1.4vw,16px);font-weight:500}
+#ndb .ndb-btn-dark{background:#232421;color:#FFFFFF}
+#ndb .ndb-btn-dark:hover{background:#313330;color:#FFFFFF}
+#ndb .ndb-btn-dark .ndb-btn-sub{color:#DBFF00}
+#ndb .ndb-btn-fluo{background:#DBFF00;color:#232421}
+#ndb .ndb-btn-fluo:hover{background:#C2E000;color:#232421}
+#ndb .ndb-btn-fluo .ndb-btn-sub{color:#3A4021}
+#ndb .ndb-cd{display:flex;flex-direction:column;align-items:center;min-width:52px}
+#ndb .ndb-cd b{font-size:clamp(28px,3.4vw,40px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+#ndb .ndb-cd span{margin-top:6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#4C4D48}
+#ndb .ndb-sep{font-size:clamp(24px,3vw,34px);font-weight:500;line-height:1;color:#797D73}
+#ndb .ndb-proof{margin:0;background:#FFFFFF;border:1px solid rgba(35,36,33,0.12);border-radius:24px;padding:12px;box-shadow:0 14px 34px rgba(35,36,33,0.10);text-align:left}
+#ndb .ndb-proof img{width:100%;height:auto;display:block;border-radius:12px;background:#E0DAC8}
+#ndb .ndb-proof figcaption{padding:12px 6px 4px;display:flex;flex-direction:column;gap:2px}
+#ndb .ndb-proof figcaption b{font-size:15px;font-weight:600;color:#232421}
+#ndb .ndb-proof figcaption span{font-size:14px;line-height:1.4;color:#4F504D}
+/* video prozor */
+#ndb-vsl-modal{position:fixed;inset:0;z-index:99999;background:rgba(7,10,1,0.85);display:none;align-items:center;justify-content:center;padding:20px}
+#ndb-vsl-modal.open{display:flex}
+#ndb-vsl-modal .box{position:relative;width:100%;max-width:960px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+#ndb-vsl-modal iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+#ndb-vsl-modal .x{position:absolute;top:-44px;right:0;width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:20px;line-height:1;cursor:pointer}
+</style>
+
+<div id="ndb">
+<section data-screen-label="Hero" style="background:#DBFF00;padding:clamp(16px,2vw,24px) clamp(20px,5vw,64px) calc(20px + min(clamp(90px,15vw,180px), max(80px, (100svh - 370px) / 2)));">
+  <div style="font-size:clamp(15px,1.4vw,18px);font-weight:600;letter-spacing:-0.01em;">AI dizajnira, Ti zarađuješ</div>
+
+  <div style="margin-top:12px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px 12px;background:#FFFFFF;border-radius:999px;padding:8px 20px;font-size:clamp(11px,1.1vw,13px);font-weight:600;letter-spacing:.06em;text-transform:uppercase;">
+    <span style="display:flex;align-items:center;gap:8px;color:#232421;"><span style="width:9px;height:9px;border-radius:50%;background:#D92D20;display:inline-block;"></span>Zoom uživo</span>
+    <span style="color:#797D73;">|</span>
+    <span>Besplatni webinar</span>
+    <span style="color:#797D73;">|</span>
+    <span>Utorak 13. okt · 19h</span>
+  </div>
+
+  <h1 class="ndb-display" style="margin-top:clamp(14px,2vw,22px);max-width:960px;font-size:clamp(24px,3.8vw,55px);line-height:1.08;letter-spacing:-0.01em;color:#232421;">NAJLAKŠI NAČIN DA ZA 30 DANA KRENEŠ DA ZARAĐUJEŠ SA AI</h1>
+
+  <p style="margin-top:10px;max-width:620px;font-size:clamp(15px,1.5vw,18px);line-height:1.45;font-weight:500;color:#313330;text-wrap:pretty;">AI radi sav težak deo posla umesto tebe. Tvoje je da nađeš klijente i prodaš. A na webinaru ću te naučiti kako.</p>
+</section>
+
+<section data-screen-label="VSL + CTA" style="background:#F2EFE6;padding:0 clamp(20px,5vw,64px) clamp(56px,7vw,88px);">
+  <a id="ndb-vsl" href="#vsl" aria-label="Pusti video" style="margin-top:calc(-1 * min(clamp(90px,15vw,180px), max(80px, (100svh - 370px) / 2)));width:100%;max-width:min(620px, max(285px, (100svh - 370px) * 1.7778));aspect-ratio:16 / 9;position:relative;display:block;border-radius:16px;overflow:hidden;background:#070A01 url('https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a40ed58d2e509a66a3aaa0e_Webinar%20BG.png') center 8% / 100% auto no-repeat;box-shadow:0 24px 60px rgba(35,36,33,0.22);">
+    <span style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(7,10,1,0) 40%, rgba(7,10,1,0.75) 100%);"></span>
+    <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:clamp(56px,7vw,76px);height:clamp(56px,7vw,76px);border-radius:50%;background:#DBFF00;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.35);">
+      <svg width="40%" height="40%" viewBox="0 0 24 24" fill="#232421"><path d="M7 4.5v15l13-7.5z"></path></svg>
+    </span>
+    <span style="position:absolute;left:0;right:0;bottom:14px;font-size:14px;font-weight:600;color:#FFFFFF;letter-spacing:.02em;">Pogledaj video (2 min)</span>
+  </a>
+
+  <a class="ndb-btn ndb-btn-dark" href="#prijava" style="margin-top:clamp(18px,2.2vw,26px);">
+    <span class="ndb-btn-main">Rezerviši svoje mesto besplatno →</span>
+    <span class="ndb-btn-sub">Utorak, 13. oktobra u 19h · Zoom</span>
+  </a>
+  <p style="margin-top:12px;font-size:13.5px;line-height:1.5;color:#797D73;">Kroz moje edukacije prošlo je preko 40.000 ljudi od 2020. godine.</p>
+
+  <div style="margin-top:clamp(28px,3.5vw,40px);font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#232421;">Webinar počinje za:</div>
+  <div id="countdown" style="margin-top:12px;display:flex;align-items:flex-start;gap:clamp(10px,2vw,20px);color:#232421;">
+    <div class="ndb-cd"><b data-days>--</b><span>Dana</span></div>
+    <span class="ndb-sep">:</span>
+    <div class="ndb-cd"><b data-hours>--</b><span>Sati</span></div>
+    <span class="ndb-sep">:</span>
+    <div class="ndb-cd"><b data-mins>--</b><span>Min</span></div>
+    <span class="ndb-sep">:</span>
+    <div class="ndb-cd"><b data-secs>--</b><span>Sek</span></div>
+  </div>
+</section>
+
+<section data-screen-label="Polaznici" style="background:#FFFFFF;padding:clamp(56px,7vw,96px) clamp(20px,5vw,64px) clamp(64px,8vw,104px);overflow:hidden;">
+  <div style="display:inline-flex;align-items:center;gap:8px;background:#F2EFE6;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#232421;">
+    <span style="width:8px;height:8px;border-radius:50%;background:#232421;display:inline-block;"></span>40.000+ ljudi kroz moje edukacije od 2020.
+  </div>
+  <h2 class="ndb-display" style="margin-top:18px;max-width:900px;font-size:clamp(22px,3vw,38px);line-height:1.1;color:#232421;">Polaznici sa webinara već naplaćuju svoje sajtove</h2>
+
+  <figure style="margin-top:clamp(36px,5vw,56px);width:100%;max-width:1120px;">
+    <img src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a958b360c69bf6abd17f18f_7cfd774d-85aa-4c0e-8b6c-ed3ad7816d25.jpeg" alt="Justin Strelarac i Nikola Tripković drže Justinove objave: prvi klijent i drugi sajt naplaćen 40.000 dinara" style="width:100%;height:auto;display:block;border-radius:24px;">
+    <figcaption style="margin-top:12px;font-size:14px;line-height:1.5;color:#797D73;">Justin je došao sa webinara. Prvi klijent u julu, drugi sajt naplaćen 40.000 dinara.</figcaption>
+  </figure>
+
+  <div style="margin-top:clamp(28px,4vw,48px);width:100%;max-width:1120px;display:grid;grid-template-columns:repeat(auto-fill, minmax(clamp(calc(25% - 15px), (640px - 100%) * 999, calc(50% - 10px)), 1fr));gap:clamp(14px,2vw,20px);align-items:start;">
+    <figure class="ndb-proof" style="transform:rotate(-2.5deg);">
+      <img loading="lazy" src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a5a7d0e7687f41471ca539b_IMG_6488.jpg" alt="Martin Sekicki - prvi klijent, sajt za FastFood (300€)">
+      <figcaption><b>Martin Sekicki</b><span>Prvi klijent, sajt za FastFood (300€)</span></figcaption>
+    </figure>
+    <figure class="ndb-proof" style="transform:rotate(2deg);">
+      <img loading="lazy" src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a5a7d0ecc1ad95da50d35ad_IMG_6487.jpg" alt="Gordana Jeftić - sajt joj puni kalendar konsultacija">
+      <figcaption><b>Gordana Jeftić</b><span>Sajt joj puni kalendar konsultacija</span></figcaption>
+    </figure>
+    <figure class="ndb-proof" style="transform:rotate(-1.5deg);">
+      <img loading="lazy" src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a5a7d0c90ac587600b2ff55_IMG_6486.jpg" alt="Stefana Milenković - dogovorila prvi projekat sa klijentom">
+      <figcaption><b>Stefana Milenković</b><span>Dogovorila prvi projekat sa klijentom</span></figcaption>
+    </figure>
+    <figure class="ndb-proof" style="transform:rotate(2.5deg);">
+      <img loading="lazy" src="https://cdn.prod.website-files.com/6114c0249ef45bc2232a4788/6a5a7d0da00cbd8282803ef1_IMG_6485.jpg" alt="Nemanja Jovanović - prvi klijent, sajt za 550€">
+      <figcaption><b>Nemanja Jovanović</b><span>Prvi klijent, sajt za 550€</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section data-screen-label="Završni CTA" style="background:#232421;color:#FFFFFF;padding:clamp(56px,7vw,88px) clamp(20px,5vw,64px) 32px;">
+  <h2 class="ndb-display" style="max-width:820px;font-size:clamp(22px,3vw,36px);line-height:1.12;color:#FFFFFF;">Prijavi se na besplatni webinar AI dizajnira, Ti zarađuješ</h2>
+  <a class="ndb-btn ndb-btn-fluo" href="#prijava" style="margin-top:28px;">
+    <span class="ndb-btn-main">Rezerviši svoje mesto besplatno →</span>
+    <span class="ndb-btn-sub">Utorak, 13. oktobra u 19h · Zoom</span>
+  </a>
+  <div style="margin-top:clamp(48px,6vw,72px);width:100%;border-top:1px solid rgba(255,255,255,0.14);padding-top:24px;font-size:13.5px;color:#9A9C96;">© 2026 · AI dizajnira, Ti zarađuješ</div>
+</section>
+</div>
+
+<div id="ndb-vsl-modal" role="dialog" aria-modal="true" aria-label="Video"><div class="box"><button class="x" type="button" aria-label="Zatvori">×</button></div></div>
+<script>
+/* Video (2 min): link za ugradnju videa (npr. Vidzflow "https://app.vidzflow.com/v/..."). Prazno = klik na sliku otvara prijavu. */
+(function(){
+  var VSL_URL = "https://app.vidzflow.com/v/m4owz6mJ42?dq=576&ap=true&muted=false&loop=false&ctp=true&bv=false&piv=false&playsinline=false&bc=%234E5FFD&controls=play-large%2Cplay%2Cprogress%2Ccurrent-time%2Cmute%2Cvolume%2Csettings%2Cfullscreen";
+  var a = document.getElementById("ndb-vsl"), m = document.getElementById("ndb-vsl-modal");
+  if (!a || !m) return;
+  if (!VSL_URL) { a.setAttribute("href", "#prijava"); return; }
+  var box = m.querySelector(".box");
+  function close(){ m.classList.remove("open"); var f = box.querySelector("iframe"); if (f) f.remove(); }
+  a.addEventListener("click", function(e){
+    e.preventDefault();
+    var f = document.createElement("iframe");
+    f.src = VSL_URL; f.allow = "autoplay; fullscreen; picture-in-picture"; f.allowFullscreen = true;
+    box.appendChild(f); m.classList.add("open");
+  });
+  m.querySelector(".x").addEventListener("click", close);
+  m.addEventListener("click", function(e){ if (e.target === m) close(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") close(); });
+})();
+</script>

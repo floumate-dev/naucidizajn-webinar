@@ -52,7 +52,7 @@ docs/
 
 | Stvar | Vrednost |
 |---|---|
-| Landing URL | `https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-webinar` |
+| Landing URL | A/B test `https://www.naucidizajn.com/t/ai-dizajnira-ti-zaradjujes-webinar` → `…-webinar-a` / `…-webinar-b` (od 13.10.2026). Reklame, thank-you i referral dashboard vode na `/t/` |
 | Thank-you URL | `https://www.naucidizajn.com/ai-dizajnira-ti-zaradjujes-thank-you` |
 | Thank-you slug (u landing JS) | `/ai-dizajnira-ti-zaradjujes-thank-you` |
 | Webinar termin | 9. jul 2026, 19:00 Europe/Belgrade (CEST, 17:00 UTC) |

@@ -69,3 +69,14 @@ Legenda: `[x]` gotovo · `[ ]` čeka · ⏳ čeka nekog (ko) · (D) radi Danilo 
 - [ ] Uključiti Claude YT opt-in Kit automation (samo za nove prijave posle webinara)
 - [ ] Retencija: novi talas članova sama prepoznaje kao novi period churn-a (ništa ne treba)
 - [ ] Prolaz kroz celu Retenciju sa Danilom + optimizacija Pretplata (Marketing)
+
+## Stanje 02.10.2026 (veče)
+- [x] Zoom licenca rešena (Danilo)
+- [x] Ponuda i VSL na thank-you isti kao 06.09
+- [x] Landing A: `landing-13okt-EMBED-1/2.html`, zalepljeno (staging). Slug je sada **`/ai-dizajnira-ti-zaradjujes-webinar-a`**
+- [x] Landing B (A/B test): `landing-B-13okt-EMBED-1.html` (dizajn iz Claude Design-a, slike sa Webflow CDN-a, video Vidzflow `m4owz6mJ42` u prozoru) + ISTI `landing-13okt-EMBED-2.html`. Slug **`/ai-dizajnira-ti-zaradjujes-webinar-b`**
+- [x] A/B test u dashboard-u: **`https://www.naucidizajn.com/t/ai-dizajnira-ti-zaradjujes-webinar`** → -a / -b (provereno HEAD-om, `r=` i `ab=` idu dalje). Reklame vode na `/t/`
+- [x] Thank-you: `thankyou-13okt-2026.html` (datum, WhatsApp `DkAo72OKeYmIPzhjucKPqI`, referral link → `/t/`)
+- [x] Referral dashboard: link „podeli" → `/t/`, objavljen na Vercel-u (nalog naucidizajn)
+- ⚠️ Test na `/t/` se NE briše dok webinar traje (obrisan test → početna strana sajta)
+- [ ] Objava A, B i thank-you na glavni domen (Danilo)
