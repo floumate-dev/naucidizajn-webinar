@@ -19,7 +19,7 @@ setTimeout(function () { obs.disconnect(); }, 20000);
 :root{--nd-font-sans:"Raptor TTF","Raptor Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--ndb-display:'Special Gothic Expanded One',"Raptor TTF",sans-serif}
 html{scroll-behavior:smooth}
 body{margin:0;background:#F2EFE6}
-#ndb,#ndb *{box-sizing:border-box}
+*,*::before,*::after{box-sizing:border-box}
 #ndb{font-family:var(--nd-font-sans);font-weight:400;line-height:normal;color:#232421}
 #ndb a{text-decoration:none}
 #ndb h1,#ndb h2,#ndb p,#ndb figure{margin:0}
@@ -44,6 +44,13 @@ body{margin:0;background:#F2EFE6}
 #ndb .ndb-proof figcaption{padding:12px 6px 4px;display:flex;flex-direction:column;gap:2px}
 #ndb .ndb-proof figcaption b{font-size:15px;font-weight:600;color:#232421}
 #ndb .ndb-proof figcaption span{font-size:14px;line-height:1.4;color:#4F504D}
+/* polje telefona u formi za prijavu (forma je u EMBED-2; isti stil kao na landingu A) */
+.ndm-phone-row{display:flex;gap:0;width:100%;border:1px solid rgba(255,255,255,0.14);border-radius:8px;background:#232421;overflow:hidden;transition:border-color .18s ease}
+.ndm-phone-row:focus-within{border-color:#DBFF00}
+.ndm-country-select{flex:0 0 auto;width:120px;font-family:inherit;font-size:15px;color:#fff;background-color:transparent;border:none;border-right:1px solid rgba(255,255,255,0.14);border-radius:0;padding:14px 34px 14px 14px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M0 0l5 6 5-6z' fill='%23DBFF00'/></svg>");background-repeat:no-repeat;background-position:right 12px center;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;text-overflow:ellipsis;white-space:nowrap}
+.ndm-phone-input{flex:1 1 auto;min-width:0;border:none;border-radius:0;background:transparent;color:#fff;font-family:inherit;font-size:16px;padding:14px 16px;outline:none}
+.ndm-country-select option,.ndm-country-select optgroup{background:#232421;color:#fff}
+.ndm-country-select optgroup{color:#DBFF00;font-weight:700;font-style:normal}
 /* video prozor */
 #ndb-vsl-modal{position:fixed;inset:0;z-index:99999;background:rgba(7,10,1,0.85);display:none;align-items:center;justify-content:center;padding:20px}
 #ndb-vsl-modal.open{display:flex}
