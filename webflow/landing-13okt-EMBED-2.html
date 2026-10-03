@@ -147,8 +147,27 @@
   overlay.innerHTML = html;
   document.body.appendChild(overlay);
 
+  /* A/B test: klik na "Rezervisi mesto" (otvaranje forme) -> dashboard. Samo kad je posetilac
+     dosao preko /t/ linka (ab=<slug>.<A|B> u linku). Bez licnih podataka: varijanta + nasumican
+     broj iz pregledaca. sendBeacon ne ceka odgovor i ne sme da ometa formu. */
+  var AB_KLIK_URL = "https://naucidizajn-dashboard.vercel.app/t/";
+  function ndAbKlik(){
+    try {
+      var ab = (new URLSearchParams(window.location.search).get("ab") || "").trim();
+      var m = ab.match(/^([a-z0-9][a-z0-9-]{0,59})\.(A|B)$/i);
+      if (!m || !navigator.sendBeacon) return;
+      var vid = "";
+      try { vid = localStorage.getItem("nd_vid") || ""; } catch(_){}
+      if (!/^[A-Za-z0-9_-]{8,64}$/.test(vid)) {
+        vid = Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+        try { localStorage.setItem("nd_vid", vid); } catch(_){}
+      }
+      navigator.sendBeacon(AB_KLIK_URL + m[1].toLowerCase() + "/klik", JSON.stringify({ v: m[2].toUpperCase(), vid: vid }));
+    } catch(_){}
+  }
   function openM(e){
     if(e) e.preventDefault();
+    ndAbKlik();
     if (typeof submitted !== "undefined" && submitted) {
       document.getElementById("ndm-form").style.display="none";
       document.getElementById("ndm-success").style.display="block";
