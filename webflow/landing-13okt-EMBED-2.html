@@ -2,14 +2,18 @@
 /* =========================================================================
    PRIJAVA \u2014 AEvent registracija + Make webhook + tracking + referral
 
-   Tok na submit (po proven Tibor evergreen pattern-u):
-   1. Validacija (ime, email, telefon).
-   2. Make webhook (fire-and-forget JSON keepalive) \u2014 Kit + tracking. Vokativ se
-      ra\u010duna OVDE u browseru (inline), pa Make nema HTTP korak za vokativ.
-   3. AEvent API registracija (awaited) \u2014 attendance/watch-time tracking; AEvent
-      sam dodeli upcoming sesiju (secret+wtl, BEZ webinarid) i \u0161alje link/podsetnike.
-   4. Tek na AEvent OK -> redirect na thank-you (email/name/ref u URL-u + sessionStorage).
-      AEvent error -> poruka u modalu, BEZ redirecta (osoba nije registrovana).
+   Forma u DVA KORAKA (05.10.2026, Nikola: ljudi ne vole da ostave telefon odmah):
+   KORAK 1 (ime + email -> "Rezervisi svoje mesto"):
+   1. Validacija (ime, email bez dva @, ispravka cestih gresaka tipa gmail.con).
+   2. Make webhook, step:"prijava" (fire-and-forget JSON keepalive) \u2014 Kit, GHL, Sheets,
+      CAPI Lead, dashboard. Vokativ se ra\u010duna OVDE u browseru.
+   3. AEvent API registracija BEZ telefona (awaited). AEvent OK -> korak 2.
+      AEvent error -> poruka u modalu (osoba nije registrovana). Ako AEvent ipak trazi
+      telefon -> registracija se zavrsava u koraku 2, a "Preskoci" se ne nudi.
+   KORAK 2 (telefon za WhatsApp podsetnik):
+   - Potvrdi -> Make webhook, step:"telefon" (isti event_id i email) -> u Make-u ide SAMO
+     na rutu "Telefon" (GHL Update phone + Sheets Update a Row), ne u CAPI/dashboard/Kit.
+   - Preskoci (sekundarno dugme) -> thank-you bez telefona.
 
    URL capture: ?source= ?specificsource= (ad tracking), ?r= (referral kod) -> sessionStorage.
    ========================================================================= */
@@ -82,46 +86,68 @@
       + '</div>';
   }
 
-  /* telefon: country dropdown (E.164 validacija kao kod Tibora) */
+  /* telefon: izbor drzave (05.10, Danilo): zastave kao SLIKE (Windows ne crta emoji zastave, pise "RS"),
+     ime drzave i za Balkan, bez Kosova, lista se otvara ISPOD polja (u samom prozoru, ne gura se gore).
+     Skriveni <select id="ndm-country"> ostaje kao izvor vrednosti (buildPhone, geo-IP, placeholder). */
   var NDM_COUNTRIES = {
     Balkan: [
-      ["+385","HR","\ud83c\udded\ud83c\uddf7 +385"],["+387","BA","\ud83c\udde7\ud83c\udde6 +387"],["+381","RS","\ud83c\uddf7\ud83c\uddf8 +381"],
-      ["+382","ME","\ud83c\uddf2\ud83c\uddea +382"],["+386","SI","\ud83c\uddf8\ud83c\uddee +386"],["+389","MK","\ud83c\uddf2\ud83c\uddf0 +389"],
-      ["+383","XK","\ud83c\uddfd\ud83c\uddf0 +383"],["+355","AL","\ud83c\udde6\ud83c\uddf1 +355"]
+      ["+381","RS","Srbija"],["+387","BA","Bosna i Hercegovina"],["+385","HR","Hrvatska"],["+382","ME","Crna Gora"],
+      ["+386","SI","Slovenija"],["+389","MK","Makedonija"],["+355","AL","Albanija"]
     ],
     Ostalo: [
-      ["+61","AU","\ud83c\udde6\ud83c\uddfa Australija (+61)"],["+43","AT","\ud83c\udde6\ud83c\uddf9 Austrija (+43)"],["+32","BE","\ud83c\udde7\ud83c\uddea Belgija (+32)"],
-      ["+55","BR","\ud83c\udde7\ud83c\uddf7 Brazil (+55)"],["+359","BG","\ud83c\udde7\ud83c\uddec Bugarska (+359)"],["+420","CZ","\ud83c\udde8\ud83c\uddff \u010ce\u0161ka (+420)"],
-      ["+45","DK","\ud83c\udde9\ud83c\uddf0 Danska (+45)"],["+20","EG","\ud83c\uddea\ud83c\uddec Egipat (+20)"],["+63","PH","\ud83c\uddf5\ud83c\udded Filipini (+63)"],
-      ["+358","FI","\ud83c\uddeb\ud83c\uddee Finska (+358)"],["+33","FR","\ud83c\uddeb\ud83c\uddf7 Francuska (+33)"],["+30","GR","\ud83c\uddec\ud83c\uddf7 Gr\u010dka (+30)"],
-      ["+91","IN","\ud83c\uddee\ud83c\uddf3 Indija (+91)"],["+62","ID","\ud83c\uddee\ud83c\udde9 Indonezija (+62)"],["+353","IE","\ud83c\uddee\ud83c\uddea Irska (+353)"],
-      ["+39","IT","\ud83c\uddee\ud83c\uddf9 Italija (+39)"],["+972","IL","\ud83c\uddee\ud83c\uddf1 Izrael (+972)"],["+81","JP","\ud83c\uddef\ud83c\uddf5 Japan (+81)"],
-      ["+27","ZA","\ud83c\uddff\ud83c\udde6 Ju\u017enoafri\u010dka R. (+27)"],["+1","CA","\ud83c\udde8\ud83c\udde6 Kanada (+1)"],["+86","CN","\ud83c\udde8\ud83c\uddf3 Kina (+86)"],
-      ["+36","HU","\ud83c\udded\ud83c\uddfa Ma\u0111arska (+36)"],["+60","MY","\ud83c\uddf2\ud83c\uddfe Malezija (+60)"],["+52","MX","\ud83c\uddf2\ud83c\uddfd Meksiko (+52)"],
-      ["+31","NL","\ud83c\uddf3\ud83c\uddf1 Holandija (+31)"],["+47","NO","\ud83c\uddf3\ud83c\uddf4 Norve\u0161ka (+47)"],["+49","DE","\ud83c\udde9\ud83c\uddea Nema\u010dka (+49)"],
-      ["+48","PL","\ud83c\uddf5\ud83c\uddf1 Poljska (+48)"],["+351","PT","\ud83c\uddf5\ud83c\uddf9 Portugal (+351)"],["+40","RO","\ud83c\uddf7\ud83c\uddf4 Rumunija (+40)"],
-      ["+7","RU","\ud83c\uddf7\ud83c\uddfa Rusija (+7)"],["+1","US","\ud83c\uddfa\ud83c\uddf8 SAD (+1)"],["+966","SA","\ud83c\uddf8\ud83c\udde6 Saudijska Arabija (+966)"],
-      ["+65","SG","\ud83c\uddf8\ud83c\uddec Singapur (+65)"],["+421","SK","\ud83c\uddf8\ud83c\uddf0 Slova\u010dka (+421)"],["+34","ES","\ud83c\uddea\ud83c\uddf8 \u0160panija (+34)"],
-      ["+46","SE","\ud83c\uddf8\ud83c\uddea \u0160vedska (+46)"],["+41","CH","\ud83c\udde8\ud83c\udded \u0160vajcarska (+41)"],["+66","TH","\ud83c\uddf9\ud83c\udded Tajland (+66)"],
-      ["+90","TR","\ud83c\uddf9\ud83c\uddf7 Turska (+90)"],["+971","AE","\ud83c\udde6\ud83c\uddea UAE (+971)"],["+380","UA","\ud83c\uddfa\ud83c\udde6 Ukrajina (+380)"],
-      ["+44","GB","\ud83c\uddec\ud83c\udde7 Velika Britanija (+44)"],["+84","VN","\ud83c\uddfb\ud83c\uddf3 Vijetnam (+84)"]
+      ["+61","AU","Australija"],["+43","AT","Austrija"],["+32","BE","Belgija"],["+55","BR","Brazil"],["+359","BG","Bugarska"],
+      ["+420","CZ","\u010ce\u0161ka"],["+45","DK","Danska"],["+20","EG","Egipat"],["+63","PH","Filipini"],["+358","FI","Finska"],
+      ["+33","FR","Francuska"],["+30","GR","Gr\u010dka"],["+31","NL","Holandija"],["+91","IN","Indija"],["+62","ID","Indonezija"],
+      ["+353","IE","Irska"],["+39","IT","Italija"],["+972","IL","Izrael"],["+81","JP","Japan"],["+27","ZA","Ju\u017enoafri\u010dka R."],
+      ["+1","CA","Kanada"],["+86","CN","Kina"],["+36","HU","Ma\u0111arska"],["+60","MY","Malezija"],["+52","MX","Meksiko"],
+      ["+49","DE","Nema\u010dka"],["+47","NO","Norve\u0161ka"],["+48","PL","Poljska"],["+351","PT","Portugal"],["+40","RO","Rumunija"],
+      ["+7","RU","Rusija"],["+1","US","SAD"],["+966","SA","Saudijska Arabija"],["+65","SG","Singapur"],["+421","SK","Slova\u010dka"],
+      ["+34","ES","\u0160panija"],["+46","SE","\u0160vedska"],["+41","CH","\u0160vajcarska"],["+66","TH","Tajland"],["+90","TR","Turska"],
+      ["+971","AE","UAE"],["+380","UA","Ukrajina"],["+44","GB","Velika Britanija"],["+84","VN","Vijetnam"]
     ]
   };
+  function flagImg(cc){ return '<img src="https://flagcdn.com/w40/'+cc.toLowerCase()+'.png" alt="" width="20" height="15" style="display:block;width:20px;height:15px;border-radius:2px;object-fit:cover;flex:0 0 auto;">'; }
   function ndmOpts(list){
     return list.map(function(o){
-      return '<option value="'+o[0]+'" data-country="'+o[1]+'"'+(o[1]==="RS"?" selected":"")+'>'+o[2]+'</option>';
+      return '<option value="'+o[0]+'" data-country="'+o[1]+'"'+(o[1]==="RS"?" selected":"")+'>'+o[2]+' ('+o[0]+')</option>';
     }).join("");
   }
+  function ccItems(group, list){
+    return '<div class="ndm-cc-group">'+group+'</div>' + list.map(function(o){
+      return '<button type="button" class="ndm-cc-item" data-country="'+o[1]+'" data-search="'+(o[2]+' '+o[0]+' '+o[1]).toLowerCase()+'">'
+        + flagImg(o[1]) + '<span class="ndm-cc-name">'+o[2]+'</span><span class="ndm-cc-code">'+o[0]+'</span></button>';
+    }).join("");
+  }
+  /* stil izbora drzave (ovde, da ne mora da se menja EMBED-1 na obe stranice) */
+  (function(){
+    var st = document.createElement("style");
+    st.textContent = ".ndm-cc-btn{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:0 12px 0 14px;background:transparent;border:none;border-right:1px solid rgba(255,255,255,0.14);color:#fff;font-family:inherit;font-size:15px;cursor:pointer}"
+      + ".ndm-cc-btn .ndm-cc-caret{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #DBFF00;margin-left:2px;transition:transform .15s}"
+      + ".ndm-cc-btn[aria-expanded=true] .ndm-cc-caret{transform:rotate(180deg)}"
+      + ".ndm-cc-panel{display:none;margin-top:6px;border:1px solid rgba(255,255,255,0.14);border-radius:8px;background:#232421;overflow:hidden}"
+      + ".ndm-cc-panel.is-open{display:block}"
+      + ".ndm-cc-search{width:100%;box-sizing:border-box;padding:12px 14px;border:none;border-bottom:1px solid rgba(255,255,255,0.14);background:transparent;color:#fff;font-family:inherit;font-size:16px;outline:none}"
+      + ".ndm-cc-list{max-height:220px;overflow-y:auto;padding:4px 0}"
+      + ".ndm-cc-group{padding:8px 14px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#DBFF00}"
+      + ".ndm-cc-item{display:flex;align-items:center;gap:10px;width:100%;padding:9px 14px;background:transparent;border:none;color:#fff;font-family:inherit;font-size:15px;text-align:left;cursor:pointer}"
+      + ".ndm-cc-item:hover,.ndm-cc-item:focus-visible,.ndm-cc-item.is-sel{background:rgba(219,255,0,0.12);outline:none}"
+      + ".ndm-cc-name{flex:1 1 auto}.ndm-cc-code{color:#A9AAA4}";
+    document.head.appendChild(st);
+  })();
   var phoneRowHtml = '<div style="margin-top:18px;">'
     + '<label for="ndm-telefon" style="display:block;font-size:13px;font-weight:600;color:#fff;margin-bottom:7px;">Telefon (WhatsApp)</label>'
     + '<div class="ndm-phone-row">'
-    +   '<select id="ndm-country" class="ndm-country-select" aria-label="Pozivni broj">'
+    +   '<select id="ndm-country" aria-hidden="true" tabindex="-1" style="display:none;">'
     +     '<optgroup label="Balkan">'+ndmOpts(NDM_COUNTRIES.Balkan)+'</optgroup>'
     +     '<optgroup label="Ostalo">'+ndmOpts(NDM_COUNTRIES.Ostalo)+'</optgroup>'
     +   '</select>'
+    +   '<button type="button" id="ndm-cc-btn" class="ndm-cc-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Pozivni broj"></button>'
     +   '<input id="ndm-telefon" class="ndm-phone-input" type="tel" inputmode="tel" placeholder="6x xxx xxxx" autocomplete="tel">'
     + '</div>'
-    + '<div style="margin-top:6px;font-size:12px;color:#A9AAA4;">\u0160aljemo podsetnik na WhatsApp da ne propusti\u0161 start.</div>'
+    + '<div id="ndm-cc-panel" class="ndm-cc-panel">'
+    +   '<input id="ndm-cc-search" class="ndm-cc-search" type="text" placeholder="Pretra\u017ei dr\u017eavu" autocomplete="off" aria-label="Pretra\u017ei dr\u017eavu">'
+    +   '<div id="ndm-cc-list" class="ndm-cc-list" role="listbox">' + ccItems("Balkan", NDM_COUNTRIES.Balkan) + ccItems("Ostalo", NDM_COUNTRIES.Ostalo) + '</div>'
+    + '</div>'
     + '</div>';
 
   var html = '<div role="dialog" aria-modal="true" style="width:100%;max-width:440px;background:#3D403C;border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:36px;position:relative;max-height:90vh;overflow:auto;color:#fff;box-sizing:border-box;">'
@@ -132,9 +158,18 @@
     + '<p style="margin:8px 0 0;font-size:14px;line-height:1.5;color:#D3D3D3;">Utorak, 13. oktobra u 19h, u\u017eivo preko Zoom-a. \u0160aljem ti link i podsetnik pre po\u010detka.</p>'
     + field("ndm-ime","Ime i prezime","Petar Petrovi\u0107","text","name","")
     + field("ndm-email","Email","email@primer.com","email","email","")
-    + phoneRowHtml
     + '<div id="ndm-error" style="display:none;margin-top:14px;font-size:13px;line-height:1.45;color:#FFB4B4;background:rgba(229,72,77,0.12);border:1px solid rgba(229,72,77,0.4);border-radius:8px;padding:10px 12px;"></div>'
     + '<a id="ndm-submit" href="#" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:24px;padding:20px 36px;border-radius:8px;background:#DBFF00;color:#232421;font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.01em;text-decoration:none;cursor:pointer;">Rezervi\u0161i svoje mesto <span>\u2192</span></a>'
+    + '</div>'
+    /* KORAK 2: telefon (neobavezno, osim ako ga AEvent trazi) */
+    + '<div id="ndm-step2" style="display:none;">'
+    + '<div style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#DBFF00;">Mesto je rezervisano</div>'
+    + '<h3 style="margin:12px 0 0;font-weight:600;font-size:23px;letter-spacing:-0.01em;color:#fff;">Po\u0161alji mi podsetnik na WhatsApp</h3>'
+    + '<p style="margin:8px 0 0;font-size:14px;line-height:1.5;color:#D3D3D3;">Javi\u0107emo ti se pred po\u010detak, da ne propusti\u0161 start. Broj koristimo samo za podsetnik.</p>'
+    + phoneRowHtml
+    + '<div id="ndm-error2" style="display:none;margin-top:14px;font-size:13px;line-height:1.45;color:#FFB4B4;background:rgba(229,72,77,0.12);border:1px solid rgba(229,72,77,0.4);border-radius:8px;padding:10px 12px;"></div>'
+    + '<a id="ndm-phone-ok" href="#" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:24px;padding:20px 36px;border-radius:8px;background:#DBFF00;color:#232421;font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.01em;text-decoration:none;cursor:pointer;">Potvrdi <span>\u2192</span></a>'
+    + '<a id="ndm-phone-skip" href="#" style="display:flex;align-items:center;justify-content:center;width:100%;margin-top:10px;padding:16px 36px;border-radius:8px;border:1px solid rgba(255,255,255,0.24);background:transparent;color:#fff;font-weight:600;font-size:16px;line-height:22px;text-decoration:none;cursor:pointer;box-sizing:border-box;">Presko\u010di</a>'
     + '</div>'
     + '<div id="ndm-success" style="display:none;text-align:center;padding:20px 8px;">'
     + '<div style="width:56px;height:56px;border-radius:50%;background:#DBFF00;color:#232421;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;margin:0 auto;">\u2713</div>'
@@ -168,10 +203,8 @@
   function openM(e){
     if(e) e.preventDefault();
     ndAbKlik();
-    if (typeof submitted !== "undefined" && submitted) {
-      document.getElementById("ndm-form").style.display="none";
-      document.getElementById("ndm-success").style.display="block";
-    }
+    // ponovo otvoren modal: prikazi korak na kome je osoba stala
+    if (typeof stage !== "undefined" && stage !== "form") showStage(stage);
     overlay.style.display="flex"; document.documentElement.style.overflow="hidden";
   }
   function closeM(){ overlay.style.display="none"; document.documentElement.style.overflow=""; }
@@ -182,32 +215,63 @@
 
   var ime=document.getElementById("ndm-ime"), email=document.getElementById("ndm-email"), tel=document.getElementById("ndm-telefon"), country=document.getElementById("ndm-country");
   var submitBtn=document.getElementById("ndm-submit"), errBox=document.getElementById("ndm-error");
+  var phoneOk=document.getElementById("ndm-phone-ok"), phoneSkip=document.getElementById("ndm-phone-skip"), errBox2=document.getElementById("ndm-error2");
   var phoneRow = tel ? tel.parentElement : null; // .ndm-phone-row \u2014 border ide ovde (input je borderless)
-  function vEmail(v){ v=v.trim(); var at=v.indexOf("@"); var dot=v.lastIndexOf("."); return at>0 && dot>at+1 && dot<v.length-1 && v.indexOf(" ")===-1; }
+  /* email: tacno jedan @, domen sa tackom, bez razmaka (05.10: "x@gmail.com@gmail.com" je prolazio) */
+  function vEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim()); }
+  /* ceste greske u domenu -> predlog ispravke (u bazi ~20 takvih: gmail.con, gnail.com...) */
+  var EMAIL_TYPOS = {
+    "gmail.con":"gmail.com","gmail.co":"gmail.com","gmail.cm":"gmail.com","gmail.om":"gmail.com","gmail.comm":"gmail.com",
+    "gmial.com":"gmail.com","gmai.com":"gmail.com","gmal.com":"gmail.com","gmali.com":"gmail.com","gnail.com":"gmail.com","gmaill.com":"gmail.com",
+    "hotmai.com":"hotmail.com","hotmial.com":"hotmail.com","hotmail.con":"hotmail.com",
+    "yahoo.con":"yahoo.com","yahoo.como":"yahoo.com","yaho.com":"yahoo.com",
+    "outlok.com":"outlook.com","outlook.con":"outlook.com","icloud.con":"icloud.com","icould.com":"icloud.com"
+  };
+  function emailFix(v){
+    v=String(v).trim().toLowerCase(); var at=v.lastIndexOf("@"); if(at<1) return "";
+    var dom=v.slice(at+1), fixed=EMAIL_TYPOS[dom] || (/\.con$/.test(dom) ? dom.replace(/\.con$/,".com") : "");
+    return fixed ? v.slice(0,at+1)+fixed : "";
+  }
   function vPhone(v){ return String(v).replace(/\D/g,"").length >= 6; } // labavo: bar 6 cifara
   function reset(f){ if(f) f.style.borderColor="rgba(255,255,255,0.14)"; }
   function resetRow(){ if(phoneRow) phoneRow.style.borderColor=""; } // clear inline -> CSS (neutral + fluo focus)
   function showError(m){ if(errBox){ errBox.textContent=m; errBox.style.display="block"; } }
   function clearError(){ if(errBox){ errBox.textContent=""; errBox.style.display="none"; } }
+  function showError2(m){ if(errBox2){ errBox2.textContent=m; errBox2.style.display="block"; } }
+  function clearError2(){ if(errBox2){ errBox2.textContent=""; errBox2.style.display="none"; } }
+
+  /* koraci u modalu: "form" (ime+email) -> "phone" (telefon) -> "done" (preusmeravanje) */
+  var stage = "form";
+  function showStage(s){
+    stage = s;
+    document.getElementById("ndm-form").style.display = s==="form" ? "block" : "none";
+    document.getElementById("ndm-step2").style.display = s==="phone" ? "block" : "none";
+    document.getElementById("ndm-success").style.display = s==="done" ? "block" : "none";
+  }
   function setLoading(on){
     if(on){ submitBtn.style.pointerEvents="none"; submitBtn.style.opacity="0.85"; submitBtn.innerHTML="Prijavljujem\u2026"; }
     else { submitBtn.style.pointerEvents=""; submitBtn.style.opacity=""; submitBtn.innerHTML='Rezervi\u0161i svoje mesto <span>\u2192</span>'; }
   }
 
-  /* telefon -> E.164 preko izabranog pozivnog broja (kao Tibor) */
+  /* telefon -> E.164 preko izabranog pozivnog broja.
+     05.10: iPhone automatsko popunjavanje ubaci nevidljive znakove ispred "+381...", pa je
+     ispred dodavan jos jedan pozivni broj ("+381+381..."). Zato: prvo samo cifre i "+",
+     pa poslednji "+" pobedjuje; broj koji vec pocinje pozivnim brojem bez "+" ga ne dobija opet. */
   function buildPhone(dialCode, raw){
-    var clean=function(s){ return (s||"").replace(/[\s\-().]/g,""); };
-    var num=(raw||"").trim();
-    if(!num) return "";
-    if(num.charAt(0)==="+") return clean(num);
-    if(num.indexOf("00")===0) return "+"+clean(num.slice(2));
-    return (dialCode||"+381") + clean(num).replace(/^0+/,"");
+    var s=String(raw||"").replace(/[^\d+]/g,"");
+    if(!s.replace(/\+/g,"")) return "";
+    var lastPlus=s.lastIndexOf("+");
+    if(lastPlus>-1) return "+"+s.slice(lastPlus+1).replace(/\D/g,"");
+    if(s.indexOf("00")===0) return "+"+s.slice(2);
+    var dc=String(dialCode||"+381").replace(/\D/g,"");
+    if(s.indexOf(dc)===0 && s.length>=dc.length+8) return "+"+s;
+    return "+"+dc+s.replace(/^0+/,"");
   }
 
   /* per-country placeholder + geo-IP auto-detekcija zemlje */
   var PHONE_PLACEHOLDERS = {
     HR:'91 1234567', RS:'60 1234567', BA:'61 234 567', ME:'67 123 456',
-    SI:'31 234 567', MK:'70 123 456', XK:'44 123 456', AL:'66 123 4567',
+    SI:'31 234 567', MK:'70 123 456', AL:'66 123 4567',
     AU:'412 345 678', AT:'660 1234567', BE:'470 12 34 56', BR:'11 91234 5678',
     BG:'87 123 4567', CZ:'601 123 456', DK:'20 12 34 56', EG:'100 123 4567',
     PH:'905 123 4567', FI:'40 1234567', FR:'6 12 34 56 78', GR:'691 234 5678',
@@ -220,19 +284,56 @@
     SE:'70 123 45 67', CH:'78 123 45 67', TH:'81 234 5678', TR:'501 234 5678',
     AE:'50 123 4567', UA:'50 123 4567', GB:'7400 123456', VN:'912 345 678'
   };
+  function selectedCc(){ var opt=country?country.options[country.selectedIndex]:null; return opt?opt.getAttribute("data-country"):null; }
   function setPhonePlaceholder(){
     if(!country||!tel) return;
-    var opt=country.options[country.selectedIndex];
-    var cc=opt?opt.getAttribute("data-country"):null;
+    var cc=selectedCc();
     tel.placeholder=(cc&&PHONE_PLACEHOLDERS[cc])||"6x xxx xxxx";
+    refreshCcBtn();
   }
   function applyCountryCode(code){
     if(!code||!country) return false;
     code=String(code).trim().toUpperCase();
     if(!/^[A-Z]{2}$/.test(code)) return false;
     var opt=country.querySelector('option[data-country="'+code+'"]');
-    if(opt){ opt.selected=true; country.value=opt.value; setPhonePlaceholder(); return true; }
+    // samo selected (ne country.value): +1 imaju i Kanada i SAD, value bi uvek izabrao prvu
+    if(opt){ opt.selected=true; setPhonePlaceholder(); return true; }
     return false;
+  }
+
+  /* izbor drzave: dugme (zastava + pozivni) otvara listu ispod polja, sa pretragom */
+  var ccBtn=document.getElementById("ndm-cc-btn"), ccPanel=document.getElementById("ndm-cc-panel"),
+      ccSearch=document.getElementById("ndm-cc-search"), ccList=document.getElementById("ndm-cc-list");
+  function refreshCcBtn(){
+    if(!ccBtn||!country) return;
+    var opt=country.options[country.selectedIndex], cc=selectedCc();
+    ccBtn.innerHTML=(cc?flagImg(cc):"")+'<span>'+(opt?opt.value:"")+'</span><span class="ndm-cc-caret" aria-hidden="true"></span>';
+    [].forEach.call(ccList.querySelectorAll(".ndm-cc-item"), function(b){ b.classList.toggle("is-sel", b.getAttribute("data-country")===cc); });
+  }
+  function ccFilter(q){
+    q=String(q||"").trim().toLowerCase();
+    [].forEach.call(ccList.querySelectorAll(".ndm-cc-item"), function(b){ b.style.display = !q || b.getAttribute("data-search").indexOf(q)>-1 ? "" : "none"; });
+    [].forEach.call(ccList.querySelectorAll(".ndm-cc-group"), function(g){ g.style.display = q ? "none" : ""; });
+  }
+  function ccOpen(open){
+    ccPanel.classList.toggle("is-open", open);
+    ccBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    if(open){
+      ccSearch.value=""; ccFilter("");
+      var sel=ccList.querySelector(".ndm-cc-item.is-sel"); ccList.scrollTop=0; if(sel) ccList.scrollTop = Math.max(0, sel.getBoundingClientRect().top - ccList.getBoundingClientRect().top - 40);
+      // na telefonu bez automatskog fokusa (ne iskace tastatura preko liste)
+      if(window.matchMedia && window.matchMedia("(hover:hover)").matches) ccSearch.focus();
+    }
+  }
+  if(ccBtn && ccPanel){
+    ccBtn.addEventListener("click", function(){ ccOpen(!ccPanel.classList.contains("is-open")); });
+    ccSearch.addEventListener("input", function(){ ccFilter(ccSearch.value); });
+    ccList.addEventListener("click", function(e){
+      var b=e.target.closest ? e.target.closest(".ndm-cc-item") : null; if(!b) return;
+      applyCountryCode(b.getAttribute("data-country")); ccOpen(false); tel.focus();
+    });
+    ccPanel.addEventListener("keydown", function(e){ if(e.key==="Escape"){ e.stopPropagation(); ccOpen(false); ccBtn.focus(); } });
+    document.addEventListener("click", function(e){ if(ccPanel.classList.contains("is-open") && !ccPanel.contains(e.target) && !ccBtn.contains(e.target)) ccOpen(false); });
   }
   if(country){
     country.addEventListener("change", setPhonePlaceholder);
@@ -284,23 +385,74 @@
     return "Do\u0161lo je do gre\u0161ke ("+status+"). Poku\u0161aj ponovo.";
   }
 
-  var submitted = false; // guard protiv duplog slanja
+  var submitted = false;    // guard protiv duplog slanja koraka 1
+  var mkBase = null;        // payload koraka 1 (isti event_id i email idu i u korak 2)
+  var aeventPending = false; // AEvent je trazio telefon -> registracija se zavrsava u koraku 2
+  var emailVal = "", fullName = "", ref = "", trk = {};
+
+  function sendMake(payload){
+    try { fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload), keepalive:true }).catch(function(){}); } catch(_){}
+  }
+
+  /* success + redirect na thank-you (DRY) */
+  function ndGoThankYou(){
+    showStage("done");
+    var hq = new URLSearchParams();
+    hq.set("email", emailVal);
+    if(fullName) hq.set("name", fullName);
+    if(ref) hq.set("ref", ref);
+    var sep = THANKYOU_URL.indexOf("?") > -1 ? "&" : "?";
+    setTimeout(function(){ window.location.href = THANKYOU_URL + sep + hq.toString(); }, 700);
+  }
+
+  /* AEvent API registracija (awaited): attendance tracking; AEvent dodeli sesiju (secret+wtl).
+     phone je prazan u koraku 1 (ne salje se); onOk/onErr dobijaju telo greske. */
+  function registerAEvent(phone, onOk, onErr){
+    var aeBody = new URLSearchParams();
+    aeBody.append("secret", AEVENT.SECRET);
+    aeBody.append("wtl", AEVENT.WTL);
+    aeBody.append("name", fullName);
+    aeBody.append("email", emailVal);
+    if (phone) aeBody.append("phone", phone);
+    for (var aek in trk) { if (Object.prototype.hasOwnProperty.call(trk, aek)) aeBody.append(aek, String(trk[aek])); }
+    if(ref) aeBody.append("ref", ref);
+    var ctrl = (typeof AbortController!=="undefined") ? new AbortController() : null;
+    var tid = ctrl ? setTimeout(function(){ ctrl.abort(); }, 15000) : null;
+    fetch(AEVENT.ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+      body:aeBody.toString(),
+      signal: ctrl ? ctrl.signal : undefined
+    })
+    .then(function(res){ if(tid) clearTimeout(tid); return res.text().then(function(b){ return { ok:res.ok, status:res.status, body:b }; }); })
+    .then(function(r){ if(r.ok) onOk(); else onErr(r.body, r.status, null); })
+    .catch(function(err){ if(tid) clearTimeout(tid); onErr("", 0, err); });
+  }
+  function networkMsg(err){ return err && err.name==="AbortError" ? "Mre\u017ea je prespora. Poku\u0161aj ponovo." : "Gre\u0161ka pri prijavi. Proveri vezu pa probaj ponovo."; }
+  var aeventOn = !!AEVENT.SECRET && AEVENT.SECRET.indexOf("PASTE_") !== 0;
+
+  /* ===== KORAK 1: ime + email ===== */
   submitBtn.addEventListener("click", function(e){
     e.preventDefault();
     if (submitted) return;
     clearError();
-    var ok=true; reset(ime); reset(email); resetRow();
+    var ok=true; reset(ime); reset(email);
     if(!ime.value.trim()){ ime.style.borderColor="#E5484D"; ok=false; }
-    if(!vEmail(email.value.trim())){ email.style.borderColor="#E5484D"; ok=false; }
-    if(!vPhone(tel.value)){ if(phoneRow) phoneRow.style.borderColor="#E5484D"; ok=false; }
-    if(!ok){ showError("Proveri unos \u2014 ime, ispravan email i telefon su obavezni."); return; }
+    if(!vEmail(email.value)){ email.style.borderColor="#E5484D"; ok=false; }
+    if(!ok){ showError("Proveri unos \u2014 ime i ispravan email su obavezni."); return; }
+    var fix = emailFix(email.value);
+    if(fix){
+      email.style.borderColor="#E5484D";
+      showError("Da li si mislio " + fix + "? Ispravi email pa klikni ponovo.");
+      email.value = fix; // ispravljeno u polju, drugi klik salje
+      return;
+    }
 
-    var emailVal = email.value.trim().toLowerCase();
-    var fullName = ime.value.trim().replace(/\s+/g," ");
+    emailVal = email.value.trim().toLowerCase();
+    fullName = ime.value.trim().replace(/\s+/g," ");
     var sp = splitName(fullName);
-    var phoneE164 = buildPhone(country ? country.value : "+381", tel.value);
-    var trk = getTrk();
-    var ref = getRef();
+    trk = getTrk();
+    ref = getRef();
 
     submitted = true;
     setLoading(true);
@@ -310,75 +462,62 @@
       sessionStorage.setItem("nd_signup", JSON.stringify({ email: emailVal, name: fullName, ref: ref, ts: Date.now() }));
     } catch(_){}
 
-    /* 1) Make webhook (fire-and-forget JSON keepalive): Kit + tracking. Vokativ ra\u010dunamo ovde. */
-    try {
-      var mk = { webinar:WEBINAR_ID, name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
-                 email:emailVal, phone:phoneE164, ref:ref,
-                 /* Meta CAPI (server-side Lead preko Make HTTP modula). fbc/fbp/UA/URL idu PLAIN,
-                    Make heshuje email/telefon/ime. event_time u UNIX SEKUNDAMA (ne ISO). */
-                 event_id: newEventId(),
-                 event_time: Math.floor(Date.now()/1000),
-                 event_source_url: window.location.href,
-                 client_user_agent: navigator.userAgent,
-                 fbc: getFbc(),
-                 fbp: getFbp() };
-      for (var mkk in trk) { if (Object.prototype.hasOwnProperty.call(trk, mkk)) mk[mkk] = String(trk[mkk]); }
-      fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(mk), keepalive:true }).catch(function(){});
-    } catch(_){}
+    /* 1) Make webhook, step "prijava": Kit, GHL, Sheets, CAPI, dashboard. Uvek svi kljucevi (i prazan phone). */
+    mkBase = { webinar:WEBINAR_ID, step:"prijava", name:fullName, first_name:sp.first, last_name:sp.last, vokativ:vokativ(sp.first),
+               email:emailVal, phone:"", ref:ref,
+               /* Meta CAPI (server-side Lead preko Make HTTP modula). fbc/fbp/UA/URL idu PLAIN,
+                  Make heshuje email/ime. event_time u UNIX SEKUNDAMA (ne ISO). */
+               event_id: newEventId(),
+               event_time: Math.floor(Date.now()/1000),
+               event_source_url: window.location.href,
+               client_user_agent: navigator.userAgent,
+               fbc: getFbc(),
+               fbp: getFbp() };
+    for (var mkk in trk) { if (Object.prototype.hasOwnProperty.call(trk, mkk)) mkBase[mkk] = String(trk[mkk]); }
+    sendMake(mkBase);
 
-    /* success + redirect na thank-you (DRY) */
-    function ndGoThankYou(){
-      document.getElementById("ndm-form").style.display="none";
-      document.getElementById("ndm-success").style.display="block";
-      var hq = new URLSearchParams();
-      hq.set("email", emailVal);
-      if(fullName) hq.set("name", fullName);
-      if(ref) hq.set("ref", ref);
-      var sep = THANKYOU_URL.indexOf("?") > -1 ? "&" : "?";
-      setTimeout(function(){ window.location.href = THANKYOU_URL + sep + hq.toString(); }, 700);
-    }
+    if (!aeventOn) { showStage("phone"); return; }
 
-    /* Dok je AEvent secret placeholder -> preskoci AEvent (inace bi vratio gresku i blokirao prijavu).
-       Funnel radi (Make + redirect); attendance registracija se aktivira cim ubacis pravi secret. */
-    if (!AEVENT.SECRET || AEVENT.SECRET.indexOf("PASTE_") === 0) {
-      ndGoThankYou();
-      return;
-    }
-
-    /* 2) AEvent API registracija (awaited): attendance tracking; AEvent dodeli sesiju (secret+wtl) */
-    var aeBody = new URLSearchParams();
-    aeBody.append("secret", AEVENT.SECRET);
-    aeBody.append("wtl", AEVENT.WTL);
-    aeBody.append("name", fullName);
-    aeBody.append("email", emailVal);
-    aeBody.append("phone", phoneE164);
-    for (var aek in trk) { if (Object.prototype.hasOwnProperty.call(trk, aek)) aeBody.append(aek, String(trk[aek])); }
-    if(ref) aeBody.append("ref", ref);
-
-    var ctrl = (typeof AbortController!=="undefined") ? new AbortController() : null;
-    var tid = ctrl ? setTimeout(function(){ ctrl.abort(); }, 15000) : null;
-
-    fetch(AEVENT.ENDPOINT, {
-      method:"POST",
-      headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-      body:aeBody.toString(),
-      signal: ctrl ? ctrl.signal : undefined
-    })
-    .then(function(res){ if(tid) clearTimeout(tid); return res.text().then(function(b){ return { ok:res.ok, status:res.status, body:b }; }); })
-    .then(function(r){
-      if(r.ok){
-        /* 3) AEvent OK -> success + redirect na thank-you */
-        ndGoThankYou();
-      } else {
-        submitted = false; setLoading(false);
-        showError(parseAEventError(r.body, r.status));
+    /* 2) AEvent bez telefona -> korak 2 */
+    registerAEvent("", function(){ setLoading(false); showStage("phone"); }, function(body, status, err){
+      if (!err && /phone/i.test(body || "") && !/invalid phone/i.test(body || "")) {
+        // AEvent trazi telefon: registracija se zavrsava u koraku 2, bez "Preskoci"
+        aeventPending = true; phoneSkip.style.display = "none";
+        setLoading(false); showStage("phone"); return;
       }
-    })
-    .catch(function(err){
-      if(tid) clearTimeout(tid);
       submitted = false; setLoading(false);
-      showError(err && err.name==="AbortError" ? "Mre\u017ea je prespora. Poku\u0161aj ponovo." : "Gre\u0161ka pri prijavi. Proveri vezu pa probaj ponovo.");
+      showError(err ? networkMsg(err) : parseAEventError(body, status));
     });
+  });
+
+  /* ===== KORAK 2: telefon ===== */
+  var phoneSent = false;
+  function setPhoneLoading(on){
+    phoneOk.style.pointerEvents = on ? "none" : ""; phoneOk.style.opacity = on ? "0.85" : "";
+    phoneOk.innerHTML = on ? "\u0160aljem\u2026" : 'Potvrdi <span>\u2192</span>';
+    phoneSkip.style.pointerEvents = on ? "none" : "";
+  }
+  phoneOk.addEventListener("click", function(e){
+    e.preventDefault();
+    if (phoneSent) return;
+    clearError2(); resetRow();
+    if(!vPhone(tel.value)){ if(phoneRow) phoneRow.style.borderColor="#E5484D"; showError2("Upi\u0161i broj telefona (WhatsApp)."); return; }
+    var phoneE164 = buildPhone(country ? country.value : "+381", tel.value);
+    phoneSent = true; setPhoneLoading(true);
+    /* samo telefon: u Make-u ide na rutu "Telefon" (GHL + Sheets), ne u CAPI/dashboard/Kit */
+    var mk = {}; for (var k in mkBase) { if (Object.prototype.hasOwnProperty.call(mkBase, k)) mk[k] = mkBase[k]; }
+    mk.step = "telefon"; mk.phone = phoneE164;
+    sendMake(mk);
+    if (!aeventPending) { ndGoThankYou(); return; }
+    registerAEvent(phoneE164, function(){ ndGoThankYou(); }, function(body, status, err){
+      phoneSent = false; setPhoneLoading(false);
+      showError2(err ? networkMsg(err) : parseAEventError(body, status));
+    });
+  });
+  phoneSkip.addEventListener("click", function(e){
+    e.preventDefault();
+    if (phoneSent || aeventPending) return;
+    ndGoThankYou();
   });
 })();
 
